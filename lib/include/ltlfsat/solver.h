@@ -8,7 +8,7 @@
 #ifndef SOLVER_H
 #define SOLVER_H
 
-#include "aaltasolver.h"
+#include "ltlfsat/aaltasolver.h"
 #include "formula/aalta_formula.h"
 #include "debug.h"
 #include <iostream>

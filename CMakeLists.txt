@@ -13,12 +13,7 @@ set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/output/lib )   # control
 set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/output/lib )   # control add_library STATIC
 
 set(LIBRARY_INCLUDE_PATH ${PROJECT_SOURCE_DIR}/lib/include)
+set(LIB_CUDD ${LIBRARY_INCLUDE_PATH}/cudd/libcudd.a)
 
-# add_subdirectory(app)
-# add_subdirectory(lib)
-add_subdirectory(lib/include/minisat)
-add_subdirectory(lib/include/ltlparser)
-add_subdirectory(lib/include/formula)
-add_subdirectory(lib/include/ltlfsat)
-add_subdirectory(lib/include/ltlfsyn)
-# add_subdirectory(lib/unit-test)
+add_subdirectory(app)
+add_subdirectory(lib)

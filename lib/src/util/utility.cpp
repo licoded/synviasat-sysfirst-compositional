@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <iostream>
+#include <sstream>
 
 void
 print_error (const char *msg)
