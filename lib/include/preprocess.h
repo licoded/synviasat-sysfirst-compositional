@@ -3,7 +3,7 @@
 #include <vector>
 #include <iostream>
 #include "formula/aalta_formula.h"
-#include "carchecker.h"
+#include "ltlfsat/carchecker.h"
 
 using namespace aalta;
 using namespace std;
