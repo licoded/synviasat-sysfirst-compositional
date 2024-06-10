@@ -8,7 +8,7 @@
 #ifndef CAR_SOLVER_H
 #define	CAR_SOLVER_H
 
-#include "solver.h"
+#include "ltlfsat/solver.h"
 #include "formula/aalta_formula.h"
 #include "util/hash_set.h"
 

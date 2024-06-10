@@ -13,7 +13,7 @@
 #include "formula/olg_formula.h"
 #include "formula/aalta_formula.h"
 #include "util/hash_map.h"
-#include "synthesis.h"
+#include "ltlfsyn/synthesis.h"
 using namespace std;
 
 namespace aalta

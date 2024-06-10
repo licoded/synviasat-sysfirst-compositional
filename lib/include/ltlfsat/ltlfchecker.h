@@ -9,10 +9,10 @@
 #define	LTLF_CHECKER_H
 
 #include "formula/aalta_formula.h"
-#include "solver.h"
-#include "carsolver.h"
+#include "ltlfsat/solver.h"
+#include "ltlfsat/carsolver.h"
 #include "debug.h"
-#include "evidence.h"
+#include "ltlfsat/evidence.h"
 
 namespace aalta
 {

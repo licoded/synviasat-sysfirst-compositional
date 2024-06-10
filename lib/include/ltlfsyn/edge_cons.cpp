@@ -6,7 +6,7 @@
 
 #include "formula_in_bdd.h"
 #include "af_utils.h"
-#include "carchecker.h"
+#include "ltlfsat/carchecker.h"
 #include "preprocess.h"
 
 edgeCons::edgeCons(DdNode *src_bdd, aalta_formula *state_af, aalta_formula *acc_edge)

@@ -8,9 +8,9 @@
 #ifndef CAR_CHECKER_H
 #define	CAR_CHECKER_H
 
-#include "ltlfchecker.h"
-#include "carsolver.h"
-#include "aaltasolver.h"
+#include "ltlfsat/ltlfchecker.h"
+#include "ltlfsat/carsolver.h"
+#include "ltlfsat/aaltasolver.h"
 #include "formula/aalta_formula.h"
 #include <vector>
 
