@@ -36,8 +36,6 @@ private:
     static unordered_map<ull, set<DdNode *> *> predecessors;
 
 public:
-    static set<int> var_X, var_Y;
-    static unsigned int num_varX, num_varY;
 
     static unordered_set<ull> swin_state_bdd_set;
     static unordered_set<ull> ewin_state_bdd_set;

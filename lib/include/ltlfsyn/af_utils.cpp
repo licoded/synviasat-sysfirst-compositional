@@ -216,16 +216,16 @@ bool IsAcc(aalta_formula *predecessor, unordered_set<int> &tmp_edge)
 
 void fill_in_edgeset(std::unordered_set<int> &partial_edgeset)
 {
-    if (partial_edgeset.size() == Syn_Frame::num_varX + Syn_Frame::num_varY)
+    if (partial_edgeset.size() == X_var_nums + Y_var_nums)
         return;
-    for (auto it : Syn_Frame::var_X)
+    for (auto it : X_vars)
     {
         if (partial_edgeset.find(it) == partial_edgeset.end() && partial_edgeset.find(-(it)) == partial_edgeset.end())
         {
             partial_edgeset.insert(it);
         }
     }
-    for (auto it : Syn_Frame::var_Y)
+    for (auto it : Y_vars)
     {
         if (partial_edgeset.find(it) == partial_edgeset.end() && partial_edgeset.find(-(it)) == partial_edgeset.end())
         {
@@ -278,7 +278,7 @@ void to_disjunts(aalta_formula *af, set<aalta_formula *> &disjunts)
 
 // void fill_in_Y_edgeset(std::unordered_set<int> &partial_edgeset)
 // {
-//     for (auto it : Syn_Frame::var_Y)
+//     for (auto it : Y_vars)
 //     {
 //         if (partial_edgeset.find(it) == partial_edgeset.end() && partial_edgeset.find(-(it)) == partial_edgeset.end())
 //         {
@@ -294,7 +294,7 @@ void to_disjunts(aalta_formula *af, set<aalta_formula *> &disjunts)
 //     auto op = af->oper();
 //     if (op >= 11)
 //     {
-//         if (Syn_Frame::var_X.find(op) != Syn_Frame::var_X.end()) // x-variable
+//         if (X_vars.find(op) != X_vars.end()) // x-variable
 //             return af;
 //         if (Y.find(-op) != Y.end())
 //             return aalta_formula::FALSE();
@@ -304,7 +304,7 @@ void to_disjunts(aalta_formula *af, set<aalta_formula *> &disjunts)
 //     else if (op == aalta_formula::Not)
 //     {
 //         auto rop = (af->r_af())->oper();
-//         if (Syn_Frame::var_X.find(rop) != Syn_Frame::var_X.end()) // x-variable
+//         if (X_vars.find(rop) != X_vars.end()) // x-variable
 //             return af;
 //         if (Y.find(-rop) != Y.end())
 //             return aalta_formula::TRUE();

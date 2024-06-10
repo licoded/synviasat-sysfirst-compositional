@@ -20,11 +20,8 @@ unordered_set<ull> FormulaInBdd::aaltaP_map_created;
 aalta_formula *FormulaInBdd::src_formula_ = NULL;
 DdNode *FormulaInBdd::TRUE_bddP_;
 DdNode *FormulaInBdd::FALSE_bddP_;
-unsigned int FormulaInBdd::X_var_nums;
-unsigned int FormulaInBdd::Y_var_nums;
-unsigned int FormulaInBdd::total_var_nums;
 
-void FormulaInBdd::InitBdd4LTLf(aalta_formula *src_formula, std::set<int> &X_vars, std::set<int> &Y_vars)
+void FormulaInBdd::InitBdd4LTLf(aalta_formula *src_formula)
 {
     src_formula_ = src_formula;
     global_bdd_manager_ = Cudd_Init(0, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0);
@@ -33,7 +30,7 @@ void FormulaInBdd::InitBdd4LTLf(aalta_formula *src_formula, std::set<int> &X_var
     Cudd_Ref(TRUE_bddP_);
     Cudd_Ref(FALSE_bddP_);
     // PrintMapInfo();
-    fixXYOrder(X_vars, Y_vars);
+    fixXYOrder();
     CreatedMap4AaltaP2BddP(src_formula_);
 }
 
@@ -102,11 +99,8 @@ void FormulaInBdd::CreatedMap4AaltaP2BddP(aalta_formula *af)
     }
 }
 
-void FormulaInBdd::fixXYOrder(std::set<int> &X_vars, std::set<int> &Y_vars)
+void FormulaInBdd::fixXYOrder()
 {
-    X_var_nums = X_vars.size();
-    Y_var_nums = Y_vars.size();
-    total_var_nums = X_var_nums + Y_var_nums;
     int var_cnt = 0;
     for (auto item : Y_vars)
     {

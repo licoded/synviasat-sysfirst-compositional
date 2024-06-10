@@ -11,10 +11,6 @@ using namespace aalta;
 
 bool SAT_TRACE_FLAG = false;
 
-unsigned int Syn_Frame::num_varX;
-unsigned int Syn_Frame::num_varY;
-set<int> Syn_Frame::var_X;
-set<int> Syn_Frame::var_Y;
 unordered_set<ull> Syn_Frame::swin_state_bdd_set;
 unordered_set<ull> Syn_Frame::Syn_Frame::ewin_state_bdd_set;
 unordered_set<ull> Syn_Frame::dfs_complete_state_bdd_set;
@@ -29,13 +25,12 @@ int dfs_time;
 
 bool is_realizable(aalta_formula *src_formula, unordered_set<string> &env_var, bool verbose = false)
 {
+    clear_XY_vars();
     PartitionAtoms(src_formula, env_var);
     // number of variables
-    Syn_Frame::num_varX = Syn_Frame::var_X.size();
-    Syn_Frame::num_varY = Syn_Frame::var_Y.size();
+    calc_XY_var_nums();
 
-    FormulaInBdd::InitBdd4LTLf(src_formula, Syn_Frame::var_X, Syn_Frame::var_Y);
-    // FormulaInBdd::fixXYOrder(Syn_Frame::var_X, Syn_Frame::var_Y);
+    FormulaInBdd::InitBdd4LTLf(src_formula);
     Syn_Frame::swin_state_bdd_set.insert(ull(FormulaInBdd::TRUE_bddP_));
     Syn_Frame::ewin_state_bdd_set.insert(ull(FormulaInBdd::FALSE_bddP_));
 
@@ -362,10 +357,10 @@ void PartitionAtoms(aalta_formula *af, unordered_set<string> &env_val)
     int op = af->oper();
     if (op >= 11)
         if (env_val.find(af->to_string()) != env_val.end())
-            Syn_Frame::var_X.insert(op);
+            X_vars.insert(op);
 
         else
-            Syn_Frame::var_Y.insert(op);
+            Y_vars.insert(op);
 
     else
     {

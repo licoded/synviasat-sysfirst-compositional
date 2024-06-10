@@ -12,10 +12,13 @@ include_directories (${LIBRARY_INCLUDE_PATH})
 #set sources
 file (GLOB LIB_HEADER_FILES 
         ${LIBRARY_INCLUDE_PATH}/util/*.h
+        ${LIBRARY_INCLUDE_PATH}/partvar/*.h
         ${LIBRARY_INCLUDE_PATH}/*.h)
 file (GLOB LIB_SOURCE_FILES 
+        ${LIBRARY_SRC_PATH}/partvar/*.cpp
         ${LIBRARY_SRC_PATH}/util/*.cpp
         ${LIBRARY_SRC_PATH}/*.cpp
+        ${LIBRARY_INCLUDE_PATH}/partvar/*.cpp
         ${LIBRARY_INCLUDE_PATH}/util/*.cpp
         ${LIBRARY_INCLUDE_PATH}/*.cpp)
 

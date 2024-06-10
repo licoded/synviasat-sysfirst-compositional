@@ -6,6 +6,7 @@
 #include <set>
 
 #include "formula/aalta_formula.h"
+#include "partvar/partvar.h"
 #include "af_utils.h"
 #include "cudd/cudd.h"
 
@@ -33,7 +34,6 @@ private:
     DdNode *bdd_;
 
 public:
-    static unsigned int X_var_nums, Y_var_nums, total_var_nums;
     static DdManager *global_bdd_manager_;
     static bool is_X_var(DdNode *node) { return Cudd_NodeReadIndex(node) >= Y_var_nums && Cudd_NodeReadIndex(node) < total_var_nums; }
     static bool is_Y_var(DdNode *node) { return Cudd_NodeReadIndex(node) < Y_var_nums; }
@@ -46,9 +46,9 @@ public:
 
     // static unordered_map<ull, ull> bddP_to_afP;
 
-    static void InitBdd4LTLf(aalta_formula *src_formula, std::set<int> &X_vars, std::set<int> &Y_vars);
+    static void InitBdd4LTLf(aalta_formula *src_formula);
     static void QuitBdd4LTLf() { Cudd_Quit(global_bdd_manager_); }
-    static void fixXYOrder(set<int> &X_vars, set<int> &Y_vars);
+    static void fixXYOrder();
 
     static DdNode *ConstructBdd(aalta_formula *af);
 
