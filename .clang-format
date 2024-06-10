@@ -1,6 +1,7 @@
 ---
 Language: Cpp
 BasedOnStyle: Mozilla
+IndentWidth: 4
 ColumnLimit: 116
 SpacesInParentheses: true
 AlwaysBreakAfterReturnType: None
