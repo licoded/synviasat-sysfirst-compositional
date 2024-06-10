@@ -1,8 +1,8 @@
 file (GLOB_RECURSE LTLFSYN_CXX_FILES 
-  ${CMAKE_SOURCE_DIR}/lib/*.h
-  ${CMAKE_SOURCE_DIR}/lib/*.cpp
-  ${CMAKE_SOURCE_DIR}/app/*.h
-  ${CMAKE_SOURCE_DIR}/app/*.cpp)
+  ${CMAKE_SOURCE_DIR}/lib/**.h
+  ${CMAKE_SOURCE_DIR}/lib/**.cpp
+  ${CMAKE_SOURCE_DIR}/app/**.h
+  ${CMAKE_SOURCE_DIR}/app/**.cpp)
 
 add_custom_target (format "clang-format" -i ${LTLFSYN_CXX_FILES} COMMENT "Formatting source code...")
 
@@ -16,7 +16,6 @@ foreach (tidy_target ${LTLFSYN_CXX_FILES})
   list (APPEND LTLFSYN_TIDY_TARGETS tidy_${tidy_target_name})
 endforeach (tidy_target)
 
-message(STATUS "ALL_TIDY_TARGETS: ${ALL_TIDY_TARGETS}")
-message(STATUS "LTLFSYN_TIDY_TARGETS: ${LTLFSYN_TIDY_TARGETS}")
+# message(STATUS "LTLFSYN_TIDY_TARGETS: ${LTLFSYN_TIDY_TARGETS}")
 
 add_custom_target (tidy DEPENDS ${LTLFSYN_TIDY_TARGETS})
