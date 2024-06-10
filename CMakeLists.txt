@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.8)
-PROJECT(cmaketest)
+PROJECT(ltlfsyn)
 
 # set the project name
-set(PROJECT_NAME cmaketest)
+set(PROJECT_NAME ltlfsyn)
 
 # specify the C++ standard 
 set(CMAKE_CXX_STANDARD 17)
