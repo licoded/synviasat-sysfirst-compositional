@@ -8,9 +8,8 @@
 #include <queue>
 
 #include "formula/aalta_formula.h"
-#include "synthesis.h"
-#include "syn_type.h"
-#include "formula_in_bdd.h"
+#include "synutil/formula_in_bdd.h"
+#include "synutil/syn_type.h"
 #include "cudd/cudd.h"
 
 using namespace std;

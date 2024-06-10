@@ -6,9 +6,9 @@
 #include <sys/time.h>
 
 #include "formula/aalta_formula.h"
-#include "ltlfsyn/synthesis.h"
 #include "ltlfsat/carchecker.h"
-#include "ltlfsyn/preprocess.h"
+#include "ltlfsyn/synthesis.h"
+#include "synutil/preprocess.h"
 
 using namespace aalta;
 using namespace std;

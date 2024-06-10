@@ -1,6 +1,6 @@
-#include "af_utils.h"
+#include "synutil/af_utils.h"
 #include <map>
-#include "synthesis.h"
+#include "partvar/partvar.h"
 
 std::map<aalta_formula *, aalta_formula *> f_to_xnf;
 

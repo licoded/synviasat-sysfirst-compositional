@@ -1,4 +1,4 @@
-#include "formula_in_bdd.h"
+#include "synutil/formula_in_bdd.h"
 #include <iostream>
 #include <cassert>
 #include <queue>

@@ -7,7 +7,7 @@
 
 #include "formula/aalta_formula.h"
 #include "partvar/partvar.h"
-#include "af_utils.h"
+#include "synutil/af_utils.h"
 #include "cudd/cudd.h"
 
 using namespace std;

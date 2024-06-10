@@ -3,8 +3,8 @@
 #include <queue>
 #include <algorithm>
 
-#include "formula_in_bdd.h"
-#include "preprocess.h"
+#include "synutil/formula_in_bdd.h"
+#include "synutil/preprocess.h"
 
 using namespace std;
 using namespace aalta;

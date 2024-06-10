@@ -4,10 +4,10 @@
 #include <tuple>
 #include <algorithm>
 
-#include "formula_in_bdd.h"
-#include "af_utils.h"
 #include "ltlfsat/carchecker.h"
-#include "preprocess.h"
+#include "ltlfsyn/synthesis.h"
+#include "synutil/af_utils.h"
+#include "synutil/preprocess.h"
 
 edgeCons::edgeCons(DdNode *src_bdd, aalta_formula *state_af, aalta_formula *acc_edge)
     : state_af_(state_af), blocked_Y_(aalta_formula::TRUE()),

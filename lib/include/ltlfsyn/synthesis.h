@@ -6,9 +6,9 @@
 #include <set>
 
 #include "formula/aalta_formula.h"
-#include "edge_cons.h"
-#include "formula_in_bdd.h"
-#include "syn_type.h"
+#include "ltlfsyn/edge_cons.h"
+#include "synutil/formula_in_bdd.h"
+#include "synutil/syn_type.h"
 #include "cudd/cudd.h"
 
 using namespace std;
