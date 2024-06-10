@@ -6,8 +6,8 @@
 #include <set>
 
 #include "formula/aalta_formula.h"
-#include "formula/af_utils.h"
-#include "deps/CUDD-install/include/cudd.h"
+#include "af_utils.h"
+#include "cudd/cudd.h"
 
 using namespace std;
 using namespace aalta;

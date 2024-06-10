@@ -11,7 +11,7 @@
 #include "synthesis.h"
 #include "syn_type.h"
 #include "formula_in_bdd.h"
-#include "deps/CUDD-install/include/cudd.h"
+#include "cudd/cudd.h"
 
 using namespace std;
 using namespace aalta;

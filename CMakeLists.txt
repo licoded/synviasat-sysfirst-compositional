@@ -14,6 +14,9 @@ set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/output/lib )   # control
 
 set(LIBRARY_INCLUDE_PATH ${PROJECT_SOURCE_DIR}/lib/include)
 
-add_subdirectory(app)
-add_subdirectory(lib)
-add_subdirectory(lib/unit-test)
+# add_subdirectory(app)
+# add_subdirectory(lib)
+add_subdirectory(lib/include/minisat)
+add_subdirectory(lib/include/ltlparser)
+add_subdirectory(lib/include/formula)
+# add_subdirectory(lib/unit-test)

@@ -2,7 +2,7 @@
 #include <cassert>
 #include <cmath>
 #include <unordered_set>
-#include "formula/af_utils.h"
+#include "af_utils.h"
 #include "synthesis.h"
 #include "formula_in_bdd.h"
 #include "utility.h"

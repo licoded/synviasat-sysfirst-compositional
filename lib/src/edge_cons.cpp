@@ -5,7 +5,7 @@
 #include <algorithm>
 
 #include "formula_in_bdd.h"
-#include "formula/af_utils.h"
+#include "af_utils.h"
 #include "carchecker.h"
 #include "preprocess.h"
 

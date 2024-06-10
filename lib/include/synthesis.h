@@ -9,7 +9,7 @@
 #include "edge_cons.h"
 #include "formula_in_bdd.h"
 #include "syn_type.h"
-#include "deps/CUDD-install/include/cudd.h"
+#include "cudd/cudd.h"
 
 using namespace std;
 using namespace aalta;

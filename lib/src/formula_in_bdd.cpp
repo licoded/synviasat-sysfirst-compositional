@@ -6,7 +6,7 @@
 #include <algorithm>
 
 #include "formula/aalta_formula.h"
-#include "deps/CUDD-install/include/cudd.h"
+#include "cudd/cudd.h"
 
 using namespace std;
 using namespace aalta;
