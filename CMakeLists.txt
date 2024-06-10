@@ -4,21 +4,9 @@ PROJECT(ltlfsyn)
 # set the project name
 set(PROJECT_NAME ltlfsyn)
 
-# specify the C++ standard 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D __STDC_LIMIT_MACROS -D __STDC_FORMAT_MACROS -w")
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
-if (CMAKE_BUILD_TYPE STREQUAL "Release")
-    message("-- In Release mode")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -static -flto -funroll-loops -fprofile-use")
-    # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg")
-elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    message("-- In Debug mode")
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D DEBUG -Wall -g")
-    # set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -pg -fsanitize=undefined -fsanitize=address -fno-omit-frame-pointer")
-endif()
+include(etc/build_type.cmake)
+include(etc/cflags.cmake)
+# include(etc/scanners.cmake)
 
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/output/bin )   # control add_executable
 set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/output/lib )   # control add_library SHARED
