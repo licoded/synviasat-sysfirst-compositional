@@ -1,4 +1,3 @@
-#include "edge_cons.h"
 #include <cassert>
 #include <iostream>
 #include <tuple>
@@ -6,8 +5,10 @@
 
 #include "ltlfsat/carchecker.h"
 #include "ltlfsyn/synthesis.h"
+#include "ltlfsyn/edge_cons.h"
 #include "synutil/af_utils.h"
 #include "synutil/preprocess.h"
+#include "synutil/syn_states.h"
 
 edgeCons::edgeCons(DdNode *src_bdd, aalta_formula *state_af, aalta_formula *acc_edge)
     : state_af_(state_af), blocked_Y_(aalta_formula::TRUE()),
@@ -121,14 +122,14 @@ XCons::XCons(DdNode *root, DdNode *state_bddp, aalta_formula *state_af, aalta_fo
             successors_.push_back(succ_state_bdd);
 
             if (succ_state_bdd == state_bddp ||
-                Syn_Frame::ewin_state_bdd_set.find(ull(succ_state_bdd)) != Syn_Frame::ewin_state_bdd_set.end())
+                syn_states::is_ewin_state(succ_state_bdd))
             {
                 status_ = Ewin;
                 return;
             }
-            else if (Syn_Frame::swin_state_bdd_set.find(ull(succ_state_bdd)) != Syn_Frame::swin_state_bdd_set.end())
+            else if (syn_states::is_swin_state(succ_state_bdd))
                 insert_swin_X_idx(X_parts_.size() - 1);
-            else if (Syn_Frame::dfs_complete_state_bdd_set.find(ull(succ_state_bdd)) != Syn_Frame::dfs_complete_state_bdd_set.end())
+            else if (syn_states::is_dfs_complete_state(succ_state_bdd))
                 insert_searched_X_idx(X_parts_.size() - 1);
 
             succ_bddP_to_idx_.insert({ull(succ_state_bdd), successors_.size() - 1});
@@ -361,8 +362,7 @@ bool XCons::checkSwinForBackwardSearch()
 {
     bool is_swin = true;
     for (auto it : searched_X_idx_)
-        if (Syn_Frame::swin_state_bdd_set.find(ull(successors_[it])) ==
-            Syn_Frame::swin_state_bdd_set.end())
+        if (syn_states::is_swin_state(successors_[it]))
         {
             is_swin = false;
             break;

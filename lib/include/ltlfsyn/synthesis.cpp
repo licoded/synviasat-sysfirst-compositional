@@ -1,23 +1,16 @@
-#include "synthesis.h"
 #include <iostream>
 #include <queue>
 #include <algorithm>
 
 #include "synutil/formula_in_bdd.h"
 #include "synutil/preprocess.h"
+#include "synutil/syn_states.h"
+#include "ltlfsyn/synthesis.h"
 
 using namespace std;
 using namespace aalta;
 
 bool SAT_TRACE_FLAG = false;
-
-unordered_set<ull> Syn_Frame::swin_state_bdd_set;
-unordered_set<ull> Syn_Frame::Syn_Frame::ewin_state_bdd_set;
-unordered_set<ull> Syn_Frame::dfs_complete_state_bdd_set;
-vector<DdNode *> Syn_Frame::swin_state_bdd_vec;
-vector<DdNode *> Syn_Frame::ewin_state_bdd_vec;
-
-unordered_map<ull, set<DdNode *> *> Syn_Frame::predecessors;
 
 unordered_map<ull, int> dfn;
 unordered_map<ull, int> low;
@@ -31,9 +24,8 @@ bool is_realizable(aalta_formula *src_formula, unordered_set<string> &env_var, b
     calc_XY_var_nums();
 
     FormulaInBdd::InitBdd4LTLf(src_formula);
-    Syn_Frame::swin_state_bdd_set.insert(ull(FormulaInBdd::TRUE_bddP_));
-    Syn_Frame::ewin_state_bdd_set.insert(ull(FormulaInBdd::FALSE_bddP_));
-
+    syn_states::insert_swin_state(FormulaInBdd::TRUE_bddP_);
+    syn_states::insert_ewin_state(FormulaInBdd::FALSE_bddP_);
     Syn_Frame *init = new Syn_Frame(src_formula);
 
     return forwardSearch(init);
@@ -79,7 +71,7 @@ bool forwardSearch(Syn_Frame *init_frame)
             --dfs_cur;
             if (dfs_cur < 0)
             {
-                Syn_Frame::releasePredecessors();
+                syn_states::releasePredecessors();
                 return cur_state_status == Swin;
             }
             else
@@ -119,14 +111,14 @@ bool forwardSearch(Syn_Frame *init_frame)
             Syn_Frame *next_frame = new Syn_Frame(next_af);
             if (next_frame->get_status() == Swin)
             {
-                Syn_Frame::insert_swin_state(next_frame->GetBddPointer(), false);
+                syn_states::insert_swin_state(next_frame->GetBddPointer(), false);
                 dfs_sta[dfs_cur]->processSignal(To_swin, next_frame->GetBddPointer());
                 while (!model.empty())
                     model.pop();
                 continue;
             }
 
-            Syn_Frame::addToGraph(dfs_sta[dfs_cur]->GetBddPointer(), next_frame->GetBddPointer());
+            syn_states::addToGraph(dfs_sta[dfs_cur]->GetBddPointer(), next_frame->GetBddPointer());
 
             if (dfn.find(ull(next_frame->GetBddPointer())) == dfn.end())
             {
@@ -165,7 +157,7 @@ bool forwardSearch(Syn_Frame *init_frame)
                         next_state_status = tarjan_sta[Iter->second]->get_status();
                     else
                     {
-                        next_state_status = Syn_Frame::getBddStatus(next_frame->GetBddPointer());
+                        next_state_status = syn_states::getBddStatus(next_frame->GetBddPointer());
                     }
                     assert(next_state_status != Dfs_incomplete);
                     Signal sig = To_swin;
@@ -214,7 +206,7 @@ void backwardSearch(vector<Syn_Frame *> &scc)
         tmp_set.clear();
         for (auto it : cur_swin)
         {
-            set<DdNode *> *pred = Syn_Frame::getPredecessors(it);
+            set<DdNode *> *pred = syn_states::getPredecessors(it);
             set_union(candidate_new_swin.begin(), candidate_new_swin.end(),
                       pred->begin(), pred->end(),
                       inserter(tmp_set, tmp_set.begin()));
@@ -230,8 +222,8 @@ void backwardSearch(vector<Syn_Frame *> &scc)
         {
             if (bddP_to_synFrP[ull(s)]->checkSwinForBackwardSearch())
             {
-                Syn_Frame::insert_swin_state(s, false);
-                Syn_Frame::remove_dfs_complete_state(s);
+                syn_states::insert_swin_state(s, false);
+                syn_states::remove_dfs_complete_state(s);
                 new_swin.insert(s);
                 undecided.erase(s);
             }
@@ -240,8 +232,8 @@ void backwardSearch(vector<Syn_Frame *> &scc)
     } while (!new_swin.empty());
     for (auto s : undecided)
     {
-        Syn_Frame::insert_ewin_state(s, false);
-        Syn_Frame::remove_dfs_complete_state(s);
+        syn_states::insert_ewin_state(s, false);
+        syn_states::remove_dfs_complete_state(s);
     }
     return;
 }
@@ -309,42 +301,16 @@ Status Syn_Frame::checkStatus()
 {
     status_ = edgeCons_->get_status();
     DdNode *bddp = GetBddPointer();
-    if (status_ == Dfs_incomplete)
-        if (swin_state_bdd_set.find(ull(bddp)) != swin_state_bdd_set.end())
-            status_ = Swin;
-        else if (ewin_state_bdd_set.find(ull(bddp)) != ewin_state_bdd_set.end())
-            status_ = Ewin;
-        else if (dfs_complete_state_bdd_set.find(ull(bddp)) != dfs_complete_state_bdd_set.end())
-            status_ = Dfs_complete;
-    switch (status_)
-    {
-    case Swin:
-        insert_swin_state(bddp, false);
-        return Swin;
-    case Ewin:
-        insert_ewin_state(bddp, false);
-        return Ewin;
-    case Dfs_complete:
-        insert_dfs_complete_state(bddp);
-        return Dfs_complete;
-    default:
-        break;
-    }
 
-    int vec_size = Syn_Frame::swin_state_bdd_vec.size();
-    for (; swin_checked_idx_ < vec_size; ++swin_checked_idx_)
-        if (FormulaInBdd::Implies(Syn_Frame::swin_state_bdd_vec[swin_checked_idx_], GetBddPointer()))
-        {
-            insert_swin_state(bddp, true);
-            return (status_ = Swin);
-        }
-    vec_size = Syn_Frame::ewin_state_bdd_vec.size();
-    for (; ewin_checked_idx_ < vec_size; ++ewin_checked_idx_)
-        if (FormulaInBdd::Implies(GetBddPointer(), Syn_Frame::ewin_state_bdd_vec[ewin_checked_idx_]))
-        {
-            insert_ewin_state(bddp, true);
-            return (status_ = Ewin);
-        }
+    if (status_ == Dfs_incomplete)
+        status_ = syn_states::get_status_by_set(bddp);
+    if (status_ != Dfs_incomplete)
+    {
+        syn_states::insert_state_with_status(bddp, status_);
+        return status_;
+    }
+    else
+        status_ = syn_states::get_status_by_set_imply(bddp, swin_checked_idx_, ewin_checked_idx_);
 
     return status_;
 }

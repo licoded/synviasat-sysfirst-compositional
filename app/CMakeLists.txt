@@ -16,12 +16,10 @@ add_executable (${APP_NAME} ${APP_SOURCE_FILES})
 
 #add the library
 target_link_libraries(${APP_NAME}
-    minisat
     ${LIB_CUDD}
     util
-    ltlparser
     formula
-    ltlfsat
+    synutil
     ltlfsyn)
 
 set_target_properties(${APP_NAME} PROPERTIES OUTPUT_NAME ltlfsyn)

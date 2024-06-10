@@ -4,9 +4,9 @@ PROJECT(ltlfsyn)
 # set the project name
 set(PROJECT_NAME ltlfsyn)
 
-if(${CMAKE_GENERATOR} STREQUAL "Unix Makefiles")
-  set(CMAKE_MAKE_PROGRAM "${PROJECT_SOURCE_DIR}/scripts/make-parallel.sh" CACHE STRING "" FORCE)
-endif()
+# if(${CMAKE_GENERATOR} STREQUAL "Unix Makefiles")
+#   set(CMAKE_MAKE_PROGRAM "${PROJECT_SOURCE_DIR}/scripts/make-parallel.sh" CACHE STRING "" FORCE)
+# endif()
 
 include(etc/build_type.cmake)
 include(etc/cflags.cmake)
@@ -19,5 +19,5 @@ set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/output/lib )   # control
 set(LIBRARY_INCLUDE_PATH ${PROJECT_SOURCE_DIR}/lib/include)
 set(LIB_CUDD ${LIBRARY_INCLUDE_PATH}/cudd/libcudd.a)
 
-add_subdirectory(app)
 add_subdirectory(lib)
+add_subdirectory(app)

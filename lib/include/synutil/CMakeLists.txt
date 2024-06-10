@@ -20,4 +20,4 @@ add_library (${LIB_NAME}
         ${LIB_SOURCE_FILES}
         ${LIB_HEADER_FILES})
 
-target_link_libraries(${LIB_NAME} formula)
+target_link_libraries(${LIB_NAME} formula ${LIB_CUDD})

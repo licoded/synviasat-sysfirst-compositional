@@ -9,6 +9,7 @@
 #include "ltlfsat/carchecker.h"
 #include "ltlfsyn/synthesis.h"
 #include "synutil/preprocess.h"
+// #include "synutil/syn_states.h"
 
 using namespace aalta;
 using namespace std;
@@ -79,11 +80,11 @@ int main(int argc, char **argv)
 		cout << "Realizable" << endl;
 	else
 		cout << "Unrealizable" << endl;
-	int state_cnt = Syn_Frame::swin_state_bdd_set.size() + Syn_Frame::ewin_state_bdd_set.size() + Syn_Frame::dfs_complete_state_bdd_set.size();
-	state_cnt -= 2;
+	// int state_cnt = syn_states::get_state_cnt();
+	// state_cnt -= 2;
 	// cout << "A total of " << (state_cnt == 0 ? 1 : state_cnt) << " traversed state(s)." << endl;
-	// cout<<Syn_Frame::swin_state_bdd_vec.size()<<endl;
-	// cout<<Syn_Frame::ewin_state_bdd_vec.size()<<endl;
+	// cout<<swin_state_bdd_vec.size()<<endl;
+	// cout<<ewin_state_bdd_vec.size()<<endl;
 	aalta_formula::destroy();
 	FormulaInBdd::QuitBdd4LTLf();
 

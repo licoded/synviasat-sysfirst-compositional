@@ -10,7 +10,6 @@
 #include "formula/aalta_formula.h"
 #include "synutil/formula_in_bdd.h"
 #include "synutil/syn_type.h"
-#include "cudd/cudd.h"
 
 using namespace std;
 using namespace aalta;
