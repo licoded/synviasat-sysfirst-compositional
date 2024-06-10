@@ -8,7 +8,6 @@
  #include "solver.h"
  #include <iostream>
  #include <assert.h>
- #include "utility.h"
  
  using namespace std;
  using namespace Minisat;

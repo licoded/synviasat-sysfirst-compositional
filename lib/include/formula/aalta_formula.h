@@ -417,6 +417,10 @@ aalta_formula::TAIL ()
 	return TAIL_;
 }
 
+aalta_formula* formula_from (std::vector<aalta_formula*>& ands);
+aalta_formula* formula_from_or (std::vector<aalta_formula*>& ors);
+void print_vec (const std::vector<int>&);
+
 }
 
 #endif	/* AALTA_FORMULA_H */

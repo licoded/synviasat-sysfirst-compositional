@@ -20,4 +20,7 @@ add_library (${LIB_NAME}
         ${LIB_SOURCE_FILES}
         ${LIB_HEADER_FILES})
 
-target_link_libraries(${LIB_NAME} formula ${LIB_CUDD})
+target_link_libraries(${LIB_NAME} PUBLIC formula)
+target_link_libraries(${LIB_NAME} PUBLIC util)
+target_link_libraries(${LIB_NAME} PUBLIC ltlfsat)
+target_link_libraries(${LIB_NAME} PUBLIC ${LIB_CUDD})

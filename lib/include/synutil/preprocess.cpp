@@ -4,7 +4,6 @@
 #include <unordered_set>
 #include "synutil/af_utils.h"
 #include "synutil/formula_in_bdd.h"
-#include "utility.h"
 
 using namespace std;
 

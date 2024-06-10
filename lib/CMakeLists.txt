@@ -28,6 +28,8 @@ add_library (${LIB_NAME}
         ${LIB_SOURCE_FILES}
         ${LIB_HEADER_FILES})
 
+target_link_libraries(${LIB_NAME} formula)
+
 add_subdirectory(include/minisat)
 add_subdirectory(include/ltlparser)
 add_subdirectory(include/formula)
@@ -35,3 +37,9 @@ add_subdirectory(include/ltlfsat)
 add_subdirectory(include/synutil)
 add_subdirectory(include/ltlfsyn)
 # add_subdirectory(unit-test)
+
+add_dependencies(formula ltlparser)
+add_dependencies(ltlfsat minisat)
+add_dependencies(ltlfsat formula)
+add_dependencies(synutil ltlfsat)
+add_dependencies(ltlfsyn synutil)

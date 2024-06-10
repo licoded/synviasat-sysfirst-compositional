@@ -21,4 +21,5 @@ add_library (${LIB_NAME}
         ${LIB_SOURCE_FILES}
         ${LIB_HEADER_FILES})
 
-target_link_libraries(${LIB_NAME} formula minisat)
+target_link_libraries(${LIB_NAME} minisat)
+target_link_libraries(${LIB_NAME} formula)
