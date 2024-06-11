@@ -1,8 +1,11 @@
 file (GLOB_RECURSE LTLFSYN_CXX_FILES 
-  ${CMAKE_SOURCE_DIR}/lib/**.h
-  ${CMAKE_SOURCE_DIR}/lib/**.cpp
-  ${CMAKE_SOURCE_DIR}/app/**.h
-  ${CMAKE_SOURCE_DIR}/app/**.cpp)
+  ${LIBRARY_APPLICATION_PATH}/*.h
+  ${LIBRARY_APPLICATION_PATH}/*.cpp
+  ${LIBRARY_INCLUDE_PATH}/*.h
+  ${LIBRARY_INCLUDE_PATH}/*.cpp
+)
+file (GLOB_RECURSE LTLFSAT_CXX_FILES ${LIBRARY_INCLUDE_PATH}/ltlfsat/*)
+list(REMOVE_ITEM LTLFSYN_CXX_FILES ${LTLFSAT_CXX_FILES})
 
 add_custom_target (format "clang-format" -i ${LTLFSYN_CXX_FILES} COMMENT "Formatting source code...")
 
