@@ -9,7 +9,7 @@
 #include "ltlfsat/carchecker.h"
 #include "ltlfsyn/synthesis.h"
 #include "synutil/preprocess.h"
-// #include "synutil/syn_states.h"
+#include "synutil/syn_states.h"
 
 using namespace aalta;
 using namespace std;

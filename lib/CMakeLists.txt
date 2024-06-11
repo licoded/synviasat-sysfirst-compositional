@@ -19,6 +19,7 @@ add_library (${LIB_NAME}
         ${LIB_SOURCE_FILES})
 target_link_libraries(${LIB_NAME} ${LIB_CUDD})
 target_link_libraries(${LIB_NAME} z)
+target_link_libraries(${LIB_NAME} m)
 
 # add_subdirectory(include/minisat)
 # add_subdirectory(include/ltlparser)
