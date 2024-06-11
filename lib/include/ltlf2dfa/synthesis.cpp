@@ -257,15 +257,16 @@ void getScc(int dfs_cur, std::vector<Syn_Frame *> &scc, vector<Syn_Frame *> &tar
 
 Syn_Frame::Syn_Frame(aalta_formula *af) : status_(Dfs_incomplete), edgeCons_(NULL), swin_checked_idx_(0), ewin_checked_idx_(0)
 {
-    aalta_formula *acc_edge = preprocessAcc(af);
-    if (acc_edge == NULL)
+    state_in_bdd_ = new FormulaInBdd(af, xnf_empty(af));
+    DdNode *bddp = state_in_bdd_->GetBddPointer();
+    if (!syn_states::in_isAcc_byEmpty_map(bddp))
+        syn_states::set_isAcc_byEmpty(bddp, IsEmptyAcc(af->nnf()));
+    edgeCons_ = new edgeCons(bddp, af, aalta_formula::FALSE());
+    /* TODO: modify!!! */
+    // edgeCons_->check_hasTravAllEdges();
+    status_ = edgeCons_->get_status();
+    if (syn_states::isAcc_byEmpty(bddp))
         status_ = Swin;
-    state_in_bdd_ = new FormulaInBdd(af);
-    if (status_ != Swin)
-    {
-        edgeCons_ = new edgeCons(state_in_bdd_->GetBddPointer(), af, acc_edge);
-        status_ = edgeCons_->get_status();
-    }
 }
 
 Syn_Frame::~Syn_Frame()
@@ -278,6 +279,8 @@ Status Syn_Frame::checkStatus()
 {
     status_ = edgeCons_->get_status();
     DdNode *bddp = GetBddPointer();
+    if (syn_states::isAcc_byEmpty(bddp))
+        status_ = Swin;
 
     if (status_ == Dfs_incomplete)
         status_ = syn_states::get_status_by_set(bddp);
@@ -314,6 +317,9 @@ void PartitionAtoms(aalta_formula *af, unordered_set<string> &env_val)
 
 void Syn_Frame::processSignal(Signal sig, DdNode *succ)
 {
+    /* NOTE: add isAcc_byEmpty_bddP_map to force those states processSignal with Swin to their predecessors */
+    if (syn_states::isAcc_byEmpty(state_in_bdd_->GetBddPointer()))
+        sig = To_swin;
     edgeCons_->processSignal(sig, succ);
 }
 
