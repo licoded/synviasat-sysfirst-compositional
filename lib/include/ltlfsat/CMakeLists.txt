@@ -2,7 +2,7 @@
 set (LIB_NAME "ltlfsat")
 
 #set includes
-include_directories (${CMAKE_CURRENT_SOURCE_DIR})
+include_directories (${LIBRARY_INCLUDE_PATH})
 include_directories (${LIBRARY_DEPENDS_PATH})
 include_directories (${LIBRARY_DEPENDS_PATH}/minisat)
 
