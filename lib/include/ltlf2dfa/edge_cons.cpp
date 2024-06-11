@@ -254,54 +254,16 @@ bool edgeCons::getEdge(unordered_set<int> &edge, queue<pair<aalta_formula *, aal
 {
     aalta_formula *edge_af = NULL;
     if (current_Y_idx_ == -1)
-    {
-        if (SAT_TRACE_FLAG)
+        for (int i = 0; i < Y_parts_.size(); ++i)
         {
-            if (!model.empty() && checkConflict(model.front()))
+            if (X_cons_[i]->hasTravAllEdges())
+                insert_trav_all_afY_Y_idx(i);
+            if (trav_all_afY_Y_idx_.find(i) == trav_all_afY_Y_idx_.end())
             {
-                while (!model.empty())
-                    model.pop();
+                current_Y_idx_ = i;
+                break;
             }
-            if (model.empty())
-            {
-                aalta_formula *to_check = state_af_;
-                // cout << "state: " << to_check->to_string() << endl;
-                // cout << "constraint: " << (get_edge_cons_for_aaltaf())->to_string() << endl;
-                to_check = aalta_formula(aalta_formula::And, to_check, blocked_Y_).unique();
-                // to_check = to_check->nnf();
-                to_check = to_check->add_tail();
-                to_check = to_check->remove_wnext();
-                to_check = to_check->simplify();
-                to_check = to_check->split_next();
-                CARChecker checker(to_check, false, true);
-                if (checker.check())
-                {
-                    const vector<pair<aalta_formula *, aalta_formula *>> *evidence = checker.get_model_for_synthesis();
-                    // checker.print_evidence();
-                    for (auto it = evidence->begin(); it < evidence->end(); ++it)
-                        model.push(*it);
-                }
-                else
-                {
-                    processSignal(Unsat, NULL);
-                    return false;
-                }
-            }
-            assert(!model.empty());
-            current_Y_idx_ = find_match_Y_idx((model.front()).second);
-            model.pop();
         }
-        else
-        {
-            if (current_Y_idx_ == -1)
-                for (int i = 0; i < Y_parts_.size(); ++i)
-                    if (ewin_Y_idx_.find(i) == ewin_Y_idx_.end() && dfs_complete_Y_idx_.find(i) == dfs_complete_Y_idx_.end())
-                    {
-                        current_Y_idx_ = i;
-                        break;
-                    }
-        }
-    }
     aalta_formula *af_Y = Y_parts_[current_Y_idx_];
     aalta_formula *af_X = X_cons_[current_Y_idx_]->getEdge();
     edge_af = aalta_formula(aalta_formula::And, af_X, af_Y).unique()->simplify();
@@ -315,11 +277,12 @@ aalta_formula *XCons::getEdge()
 {
     assert(current_X_idx_ == -1);
     for (int i = 0; i < X_parts_.size(); ++i)
-        if (swin_X_idx_.find(i) == swin_X_idx_.end() && searched_X_idx_.find(i) == searched_X_idx_.end())
+        if (trav_all_afX_X_idx_.find(i) == trav_all_afX_X_idx_.end())
         {
             current_X_idx_ = i;
             break;
         }
+    assert(current_X_idx_ != -1);
     return X_parts_[current_X_idx_];
 }
 
@@ -395,6 +358,14 @@ void edgeCons::insert_dfs_complete_Y_idx(int y)
     }
 }
 
+void edgeCons::insert_trav_all_afY_Y_idx(int y)
+{
+    if (trav_all_afY_Y_idx_.find(y) == trav_all_afY_Y_idx_.end())
+    {
+        trav_all_afY_Y_idx_.insert(y);
+    }
+}
+
 void XCons::insert_swin_X_idx(int x)
 {
     if (swin_X_idx_.find(x) == swin_X_idx_.end())
@@ -411,6 +382,14 @@ void XCons::insert_searched_X_idx(int x)
         searched_X_idx_.insert(x);
         // aalta_formula *not_X = aalta_formula(aalta_formula::Not, NULL, X_parts_[x]).nnf();
         // blocked_X_ = (aalta_formula(aalta_formula::And, blocked_X_, not_X).simplify())->unique();
+    }
+}
+
+void XCons::insert_trav_all_afX_X_idx(int x)
+{
+    if (trav_all_afX_X_idx_.find(x) == trav_all_afX_X_idx_.end())
+    {
+        trav_all_afX_X_idx_.insert(x);
     }
 }
 
