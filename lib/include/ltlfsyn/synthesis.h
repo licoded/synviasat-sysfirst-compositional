@@ -18,9 +18,6 @@ extern bool SAT_TRACE_FLAG;
 
 typedef unsigned long long ull;
 
-// main entry
-bool is_realizable(aalta_formula *src_formula, unordered_set<string> &env_var, bool verbose);
-
 class edgeCons;
 
 class Syn_Frame
