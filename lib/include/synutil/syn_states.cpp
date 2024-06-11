@@ -7,6 +7,7 @@ std::unordered_set<ull> syn_states::dfs_complete_state_bdd_set;
 std::vector<DdNode *> syn_states::swin_state_bdd_vec;
 std::vector<DdNode *> syn_states::ewin_state_bdd_vec;
 std::unordered_map<ull, std::set<DdNode *> *> syn_states::predecessors;
+std::unordered_map<ull, bool> syn_states::isAcc_byEmpty_bddP_map;
 
 Status syn_states::getBddStatus(DdNode *b)
 {

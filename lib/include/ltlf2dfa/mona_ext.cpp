@@ -4,24 +4,26 @@
 
 typedef unsigned long long ull;
 
-void printDotFile(DFA *dfa, string &dot_filename, int var_num, unsigned int *var_index)
+void printDotFile(DFA *dfa, string dot_filename, int var_num, vector<unsigned int> var_index)
 {
     FILE *original_stdout = stdout;
-    stdout = fopen(dot_filename.c_str(), "w");
+    stdout = fopen(dot_filename.data(), "w");
     // === real code BEGIN
-    dfaPrintGraphviz(dfa, var_num, var_index);
+    dfaPrintGraphviz(dfa, var_num, var_index.data());
     // === real code END
     fclose(stdout);
     stdout = original_stdout;
 }
 
-void printDfaFile(DFA *dfa, string &dfa_filename, int var_num, char *var_names[], char var_orders[])
+void printDfaFile(DFA *dfa, string dfa_filename, int var_num, std::vector<std::string> &var_names, std::vector<char> &var_orders)
 {
-    vector<char> dfa_filename_vec(dfa_filename.c_str(), dfa_filename.c_str() + dfa_filename.size() + 1);
-    dfaExport(dfa, dfa_filename_vec.data(), var_num, var_names, var_orders);
+    std::vector<char *> var_names_ptr;
+    for (auto var_name : var_names)
+        var_names_ptr.push_back(var_name.data());
+    dfaExport(dfa, dfa_filename.data(), var_num, var_names_ptr.data(), var_orders.data());
 }
 
-DFA *graph2DFA(Syn_Graph &graph, DdNode *init_bddP, int var_num, int *indicies)
+DFA *graph2DFA(Syn_Graph &graph, DdNode *init_bddP, int var_num, std::vector<int> indicies)
 {
     // assert(graph.vertices.size() > 2);  // NOTE: other cases: 1. sth. -> alway true/false 2. init is true/false !!!
     unordered_map<ull, int> bddP_to_stateid;
@@ -54,7 +56,7 @@ DFA *graph2DFA(Syn_Graph &graph, DdNode *init_bddP, int var_num, int *indicies)
         stateid_to_bddP.insert({stateid_cnt - 1, ull(vertex)});
     }
 
-    dfaSetup(bddP_to_stateid.size(), var_num, indicies);
+    dfaSetup(bddP_to_stateid.size(), var_num, indicies.data());
     vector<bool> state_visited(bddP_to_stateid.size(), 0);
     // EDGE-1. init_bddP
     auto init_edges_Iter = graph.edges.find(init_bddP);

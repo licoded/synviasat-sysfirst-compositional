@@ -35,10 +35,11 @@ int main(int argc, char **argv)
     fin.close();
 
     // read variables partition
-    fin.open(argv[2], ios::in);
+    string partfile = argv[2];
+    fin.open(partfile, ios::in);
     if (!fin.is_open())
     {
-        cout << "cannot open file " << argv[2] << endl;
+        cout << "cannot open file " << partfile << endl;
         return 0;
     }
     fin >> tmp;
@@ -66,7 +67,7 @@ int main(int argc, char **argv)
     bool verbose = readflag_from_env("VERBOSE");
     SAT_TRACE_FLAG = readflag_from_env("SAT_TRACE");
 
-    bool result = is_realizable(af, env_var, verbose);
+    bool result = is_realizable(af, env_var, partfile, verbose);
     if (result)
         cout << "Realizable" << endl;
     else
