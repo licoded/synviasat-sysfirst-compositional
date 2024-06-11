@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "formula/aalta_formula.h"
-#include <cudd/cudd.h>
+#include <cudd/cuddObj.hh>
 
 using namespace std;
 using namespace aalta;

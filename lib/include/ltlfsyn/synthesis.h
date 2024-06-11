@@ -9,7 +9,7 @@
 #include "ltlfsyn/edge_cons.h"
 #include "synutil/formula_in_bdd.h"
 #include "synutil/syn_type.h"
-#include <cudd/cudd.h>
+#include <cudd/cuddObj.hh>
 
 using namespace std;
 using namespace aalta;

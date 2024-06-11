@@ -2,7 +2,7 @@
 
 #include "synutil/syn_type.h"
 #include <cassert>
-#include <cudd/cudd.h>
+#include <cudd/cuddObj.hh>
 #include <set>
 #include <unordered_map>
 #include <unordered_set>

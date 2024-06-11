@@ -8,7 +8,7 @@
 #include "formula/aalta_formula.h"
 #include "synutil/af_utils.h"
 #include "synutil/partvar.h"
-#include <cudd/cudd.h>
+#include <cudd/cuddObj.hh>
 
 using namespace std;
 using namespace aalta;
