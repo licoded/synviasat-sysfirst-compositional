@@ -5,11 +5,11 @@
 #include <set>
 #include <unordered_set>
 
-#include "cudd/cudd.h"
 #include "formula/aalta_formula.h"
 #include "ltlfsyn/edge_cons.h"
 #include "synutil/formula_in_bdd.h"
 #include "synutil/syn_type.h"
+#include <cudd/cudd.h>
 
 using namespace std;
 using namespace aalta;

@@ -5,10 +5,10 @@
 #include <set>
 #include <unordered_map>
 
-#include "cudd/cudd.h"
 #include "formula/aalta_formula.h"
 #include "synutil/af_utils.h"
 #include "synutil/partvar.h"
+#include <cudd/cudd.h>
 
 using namespace std;
 using namespace aalta;

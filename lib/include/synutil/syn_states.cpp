@@ -1,11 +1,12 @@
 #include "synutil/syn_states.h"
+#include "synutil/formula_in_bdd.h"
 
 std::unordered_set<ull> syn_states::swin_state_bdd_set;
 std::unordered_set<ull> syn_states::ewin_state_bdd_set;
 std::unordered_set<ull> syn_states::dfs_complete_state_bdd_set;
 std::vector<DdNode *> syn_states::swin_state_bdd_vec;
 std::vector<DdNode *> syn_states::ewin_state_bdd_vec;
-std::unordered_map<ull, set<DdNode *> *> syn_states::predecessors;
+std::unordered_map<ull, std::set<DdNode *> *> syn_states::predecessors;
 
 Status syn_states::getBddStatus(DdNode *b)
 {

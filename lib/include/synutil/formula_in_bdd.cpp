@@ -5,8 +5,8 @@
 #include <queue>
 #include <vector>
 
-#include "cudd/cudd.h"
 #include "formula/aalta_formula.h"
+#include <cudd/cudd.h>
 
 using namespace std;
 using namespace aalta;
