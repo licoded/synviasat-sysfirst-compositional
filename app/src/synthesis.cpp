@@ -1,6 +1,7 @@
 #include "synthesis.h"
 #include "ltlf2dfa/mona_ext.h"
 #include "ltlf2dfa/syft_ext.h"
+#include "ltlf2dfa/synthesis.h"
 #include "ltlfsyn/synthesis.h"
 #include "synutil/formula_in_bdd.h"
 #include "synutil/partvar.h"
@@ -13,27 +14,27 @@ void get_var_names() {}
 bool is_realizable(aalta::aalta_formula *src_formula, std::unordered_set<std::string> &env_var, std::string partfile, bool verbose = false)
 {
     clear_XY_vars();
-    PartitionAtoms(src_formula, env_var);
+    ltlfsyn::PartitionAtoms(src_formula, env_var);
     // number of variables
     calc_XY_var_nums();
 
     FormulaInBdd::InitBdd4LTLf(src_formula);
     syn_states::insert_swin_state(FormulaInBdd::TRUE_bddP_);
     syn_states::insert_ewin_state(FormulaInBdd::FALSE_bddP_);
-    Syn_Frame *init = new Syn_Frame(src_formula);
+    ltlfsyn::Syn_Frame *init = new ltlfsyn::Syn_Frame(src_formula);
 
     hash_set<aalta_formula *> and_sub_afs = src_formula->and_to_set();
     for (auto it : and_sub_afs)
     {
-        Syn_Frame *init = new Syn_Frame(it);
-        if (!forwardSearch(init))
+        ltlfsyn::Syn_Frame *init = new ltlfsyn::Syn_Frame(it);
+        if (!ltlfsyn::forwardSearch(init))
             return false;
     }
 
     if (and_sub_afs.size() == 1)
         return true;
 
-    SAT_TRACE_FLAG = false;
+    whole_dfa::SAT_TRACE_FLAG = false;
     syn_states::set_isAcc_byEmpty(FormulaInBdd::TRUE_bddP_, true);
     syn_states::set_isAcc_byEmpty(FormulaInBdd::FALSE_bddP_, false);
 
@@ -63,7 +64,7 @@ bool is_realizable(aalta::aalta_formula *src_formula, std::unordered_set<std::st
     {
         Syn_Graph graph;
 
-        Syn_Frame *init = new Syn_Frame(it);
+        whole_dfa::Syn_Frame *init = new whole_dfa::Syn_Frame(it);
         DdNode *init_bddP = init->GetBddPointer();
         // search_whole_DFA(init, graph);
 #ifdef DEBUG

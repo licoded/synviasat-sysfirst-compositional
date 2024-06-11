@@ -5,6 +5,7 @@ set (LIB_NAME "ltlf2dfa")
 include_directories (${LIBRARY_INCLUDE_PATH})
 include_directories (${LIBRARY_DEPENDS_PATH})
 include_directories (${LIBRARY_DEPENDS_PATH}/cudd)
+include_directories (${LIBRARY_DEPENDS_PATH}/minisat)
 
 #set sources
 file (GLOB_RECURSE LIB_SOURCE_FILES

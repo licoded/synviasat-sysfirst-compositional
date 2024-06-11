@@ -65,7 +65,7 @@ int main(int argc, char **argv)
     af = mySimplify(af);
 
     bool verbose = readflag_from_env("VERBOSE");
-    SAT_TRACE_FLAG = readflag_from_env("SAT_TRACE");
+    ltlfsyn::SAT_TRACE_FLAG = readflag_from_env("SAT_TRACE");
 
     bool result = is_realizable(af, env_var, partfile, verbose);
     if (result)

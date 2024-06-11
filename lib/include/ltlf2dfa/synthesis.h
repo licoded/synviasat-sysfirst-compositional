@@ -5,7 +5,7 @@
 #include <unordered_set>
 
 #include "formula/aalta_formula.h"
-#include "ltlfsyn/edge_cons.h"
+#include "ltlf2dfa/edge_cons.h"
 #include "synutil/formula_in_bdd.h"
 #include "synutil/syn_type.h"
 #include <cudd/cuddObj.hh>
@@ -13,7 +13,7 @@
 using namespace std;
 using namespace aalta;
 
-namespace ltlfsyn {
+namespace whole_dfa {
 
 extern bool SAT_TRACE_FLAG;
 
@@ -58,4 +58,4 @@ void getScc(int cur, std::vector<Syn_Frame *> &scc, vector<Syn_Frame *> &sta, un
 
 void PartitionAtoms(aalta_formula *af, unordered_set<string> &env_val);
 
-} // namespace ltlfsyn
+} // namespace whole_dfa
