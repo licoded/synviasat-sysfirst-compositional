@@ -3,14 +3,14 @@
 #include <iostream>
 #include <tuple>
 
+#include "ltlf2dfa/edge_cons.h"
+#include "ltlf2dfa/synthesis.h"
 #include "ltlfsat/carchecker.h"
-#include "ltlfsyn/edge_cons.h"
-#include "ltlfsyn/synthesis.h"
 #include "synutil/af_utils.h"
 #include "synutil/preprocess.h"
 #include "synutil/syn_states.h"
 
-namespace ltlfsyn {
+namespace whole_dfa {
 
 edgeCons::edgeCons(DdNode *src_bdd, aalta_formula *state_af, aalta_formula *acc_edge)
     : state_af_(state_af), blocked_Y_(aalta_formula::TRUE()), status_(Dfs_incomplete), current_Y_idx_(-1)
@@ -462,4 +462,4 @@ int XCons::find_match_X_idx(aalta_formula *X)
     return -1; // fail to find
 }
 
-} // namespace ltlfsyn
+} // namespace whole_dfa

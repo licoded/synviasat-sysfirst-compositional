@@ -2,7 +2,7 @@
 #include <iostream>
 #include <queue>
 
-#include "ltlfsyn/synthesis.h"
+#include "ltlf2dfa/synthesis.h"
 #include "synutil/formula_in_bdd.h"
 #include "synutil/preprocess.h"
 #include "synutil/syn_states.h"
@@ -10,7 +10,7 @@
 using namespace std;
 using namespace aalta;
 
-namespace ltlfsyn {
+namespace whole_dfa {
 
 bool SAT_TRACE_FLAG = false;
 
@@ -328,4 +328,4 @@ bool Syn_Frame::checkSwinForBackwardSearch()
     return edgeCons_->checkSwinForBackwardSearch();
 }
 
-} // namespace ltlfsyn
+} // namespace whole_dfa

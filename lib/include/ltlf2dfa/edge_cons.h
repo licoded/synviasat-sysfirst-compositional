@@ -13,9 +13,9 @@
 using namespace std;
 using namespace aalta;
 
-namespace ltlfsyn {
-
 typedef unsigned long long ull;
+
+namespace whole_dfa {
 
 class XCons
 {
@@ -98,4 +98,4 @@ class edgeCons
 
 bool isCompatible(unordered_set<int> *edge1, unordered_set<int> *edge2);
 
-} // namespace ltlfsyn
+} // namespace whole_dfa
