@@ -6,8 +6,8 @@
  * Created on October 21, 2013, 2:12 PM
  */
 
-#ifndef UTILITY_H
-#define	UTILITY_H
+#ifndef UTIL_UTILITY_H
+#define	UTIL_UTILITY_H
 
 #include <sstream>
 #include <string>

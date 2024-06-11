@@ -1,5 +1,5 @@
 #configure variables
-set (LIB_NAME "syn")
+set (LIB_NAME "ltlfsyn")
 
 #configure directories
 
