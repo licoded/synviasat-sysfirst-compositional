@@ -6,9 +6,9 @@
 #ifndef LTL_2_SMVSPEC_H
 #define LTL_2_SMVSPEC_H
 
-#include "ltl_formula.h"
-#include "trans.h"
-#include "utility.h"
+#include "ltlparser/ltl_formula.h"
+#include "ltlparser/trans.h"
+#include "ltlparser/utility.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>

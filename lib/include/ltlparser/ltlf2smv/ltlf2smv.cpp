@@ -10,7 +10,6 @@
 #include <assert.h>
 
 using namespace std;
-using namespace aalta;
 #define MAXN 1000000
 
 

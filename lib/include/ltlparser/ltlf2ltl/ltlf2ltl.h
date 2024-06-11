@@ -6,9 +6,9 @@
 #ifndef LTLF_2_LTL_H
 #define LTLF_2_LTL_H
 
-#include "ltl_formula.h"
-#include "trans.h"
-#include "utility.h"
+#include "ltlparser/ltl_formula.h"
+#include "ltlparser/trans.h"
+#include "ltlparser/utility.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>

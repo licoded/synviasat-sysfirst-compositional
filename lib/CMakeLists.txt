@@ -28,8 +28,6 @@ add_library (${LIB_NAME}
         ${LIB_SOURCE_FILES}
         ${LIB_HEADER_FILES})
 
-target_link_libraries(${LIB_NAME} formula)
-
 add_subdirectory(include/minisat)
 add_subdirectory(include/ltlparser)
 add_subdirectory(include/formula)

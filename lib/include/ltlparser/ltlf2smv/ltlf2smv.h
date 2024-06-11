@@ -6,9 +6,9 @@
 #ifndef LTL_2_SMV_H
 #define LTL_2_SMV_H
 
-#include "ltl_formula.h"
-#include "trans.h"
-#include "utility.h"
+#include "ltlparser/ltl_formula.h"
+#include "ltlparser/trans.h"
+#include "ltlparser/utility.h"
 #include <string>
 #include <set>
 #include <map>

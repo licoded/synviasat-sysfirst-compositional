@@ -17,6 +17,7 @@ set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/output/lib )   # control
 set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/output/lib )   # control add_library STATIC
 
 set(LIBRARY_INCLUDE_PATH ${PROJECT_SOURCE_DIR}/lib/include)
+set(LIBRARY_SOURCES_PATH ${PROJECT_SOURCE_DIR}/lib/src)
 set(LIB_CUDD ${LIBRARY_INCLUDE_PATH}/cudd/libcudd.a)
 
 add_subdirectory(lib)
