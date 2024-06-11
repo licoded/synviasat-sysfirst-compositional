@@ -1,9 +1,9 @@
 #pragma once
 
-#include <vector>
-#include <iostream>
 #include "formula/aalta_formula.h"
 #include "ltlfsat/carchecker.h"
+#include <iostream>
+#include <vector>
 
 using namespace aalta;
 using namespace std;
@@ -49,13 +49,10 @@ inline aalta::aalta_formula *int_to_aalta(int lit)
     if (lit > 0)
         return aalta_formula(lit, NULL, NULL).unique();
     else
-        return aalta_formula(aalta_formula::Not, NULL,
-                             aalta_formula(-lit, NULL, NULL).unique())
-            .unique();
+        return aalta_formula(aalta_formula::Not, NULL, aalta_formula(-lit, NULL, NULL).unique()).unique();
 }
 
-inline const std::vector<std::pair<aalta::aalta_formula *, aalta::aalta_formula *>> *
-isSat(aalta_formula *s, aalta_formula *b)
+inline const std::vector<std::pair<aalta::aalta_formula *, aalta::aalta_formula *>> *isSat(aalta_formula *s, aalta_formula *b)
 { // cout<<s->to_string()<<", "<<b->to_string()<<endl;
     s = (aalta_formula(aalta_formula::And, s, b).unique())->simplify();
     s = s->add_tail();
@@ -76,8 +73,7 @@ inline bool isFG(aalta_formula *af)
 
 inline aalta_formula *mk_FG(aalta_formula *f)
 {
-    return aalta_formula(aalta_formula::Until,
-                         aalta_formula::TRUE(),
+    return aalta_formula(aalta_formula::Until, aalta_formula::TRUE(),
                          aalta_formula(aalta_formula::Release, aalta_formula::FALSE(), f).unique())
         .unique();
 }

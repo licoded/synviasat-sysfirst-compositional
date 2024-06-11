@@ -1,11 +1,11 @@
 #ifndef __EDGE_CONS__
 #define __EDGE_CONS__
 
+#include <memory>
+#include <queue>
+#include <set>
 #include <unordered_map>
 #include <vector>
-#include <memory>
-#include <set>
-#include <queue>
 
 #include "formula/aalta_formula.h"
 #include "synutil/formula_in_bdd.h"
@@ -18,18 +18,18 @@ typedef unsigned long long ull;
 
 class XCons
 {
-public:
+  public:
     XCons(DdNode *XCons_bddp, DdNode *state_bddp, aalta_formula *state_af, aalta_formula *af_Y);
     void get_related_succ(vector<DdNode *> &);
     Status get_status() { return status_; }
     void processSignal(Signal, DdNode *succ);
     aalta_formula *getEdge();
-    aalta_formula * set_search_direction(aalta_formula *X);
+    aalta_formula *set_search_direction(aalta_formula *X);
     int find_match_X_idx(aalta_formula *X);
     // aalta_formula *get_blocked_X() { return blocked_X_; }
     bool checkSwinForBackwardSearch();
 
-private:
+  private:
     vector<aalta_formula *> X_parts_;
     vector<DdNode *> successors_;
 
@@ -55,16 +55,15 @@ private:
 
 class edgeCons
 {
-public:
-    edgeCons(DdNode *src_xnf_bddp, aalta_formula *state_af, aalta_formula*acc_edge);
+  public:
+    edgeCons(DdNode *src_xnf_bddp, aalta_formula *state_af, aalta_formula *acc_edge);
     ~edgeCons();
     Status get_status() { return status_; }
     void processSignal(Signal, DdNode *succ);
-    bool getEdge(unordered_set<int> &edge,
-                 queue<pair<aalta_formula *, aalta_formula *>> &model);
+    bool getEdge(unordered_set<int> &edge, queue<pair<aalta_formula *, aalta_formula *>> &model);
     bool checkSwinForBackwardSearch();
 
-private:
+  private:
     aalta_formula *state_af_;
     aalta_formula *blocked_Y_;
 
@@ -86,11 +85,9 @@ private:
     void insert_dfs_complete_Y_idx(int y);
     bool checkConflict(pair<aalta_formula *, aalta_formula *> &edge)
     {
-        return FormulaInBdd::check_conflict(
-            aalta_formula(aalta_formula::And, edge.first, edge.second).unique(),
-            blocked_Y_);
+        return FormulaInBdd::check_conflict(aalta_formula(aalta_formula::And, edge.first, edge.second).unique(), blocked_Y_);
     }
-    
+
     void resizeContainers()
     {
         Y_parts_.shrink_to_fit();

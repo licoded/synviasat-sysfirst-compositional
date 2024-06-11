@@ -1,11 +1,11 @@
+#include <algorithm>
 #include <iostream>
 #include <queue>
-#include <algorithm>
 
+#include "ltlfsyn/synthesis.h"
 #include "synutil/formula_in_bdd.h"
 #include "synutil/preprocess.h"
 #include "synutil/syn_states.h"
-#include "ltlfsyn/synthesis.h"
 
 using namespace std;
 using namespace aalta;
@@ -207,14 +207,11 @@ void backwardSearch(vector<Syn_Frame *> &scc)
         for (auto it : cur_swin)
         {
             set<DdNode *> *pred = syn_states::getPredecessors(it);
-            set_union(candidate_new_swin.begin(), candidate_new_swin.end(),
-                      pred->begin(), pred->end(),
-                      inserter(tmp_set, tmp_set.begin()));
+            set_union(candidate_new_swin.begin(), candidate_new_swin.end(), pred->begin(), pred->end(), inserter(tmp_set, tmp_set.begin()));
             candidate_new_swin.swap(tmp_set);
             tmp_set.clear();
         }
-        set_intersection(candidate_new_swin.begin(), candidate_new_swin.end(),
-                         undecided.begin(), undecided.end(),
+        set_intersection(candidate_new_swin.begin(), candidate_new_swin.end(), undecided.begin(), undecided.end(),
                          inserter(tmp_set, tmp_set.begin()));
         candidate_new_swin.swap(tmp_set);
         tmp_set.clear();
@@ -247,19 +244,15 @@ void initial_tarjan_frame(Syn_Frame *cur_frame)
 
 void update_by_low(Syn_Frame *cur_frame, DdNode *next_bddP)
 {
-    low[(ull)cur_frame->GetBddPointer()] =
-        min(low.at((ull)cur_frame->GetBddPointer()), low.at((ull)next_bddP));
+    low[(ull)cur_frame->GetBddPointer()] = min(low.at((ull)cur_frame->GetBddPointer()), low.at((ull)next_bddP));
 }
 
 void update_by_dfn(Syn_Frame *cur_frame, Syn_Frame *next_frame)
 {
-    low[(ull)cur_frame->GetBddPointer()] =
-        min(low.at((ull)cur_frame->GetBddPointer()), dfn.at((ull)next_frame->GetBddPointer()));
+    low[(ull)cur_frame->GetBddPointer()] = min(low.at((ull)cur_frame->GetBddPointer()), dfn.at((ull)next_frame->GetBddPointer()));
 }
 
-void getScc(int dfs_cur, std::vector<Syn_Frame *> &scc,
-            vector<Syn_Frame *> &tarjan_sta,
-            unordered_map<ull, int> &sta_bdd2curIdx_map)
+void getScc(int dfs_cur, std::vector<Syn_Frame *> &scc, vector<Syn_Frame *> &tarjan_sta, unordered_map<ull, int> &sta_bdd2curIdx_map)
 {
     int lowTimeId = dfn.at((ull)tarjan_sta[dfs_cur]->GetBddPointer());
 
@@ -276,9 +269,7 @@ void getScc(int dfs_cur, std::vector<Syn_Frame *> &scc,
     }
 }
 
-Syn_Frame::Syn_Frame(aalta_formula *af)
-    : status_(Dfs_incomplete), edgeCons_(NULL),
-      swin_checked_idx_(0), ewin_checked_idx_(0)
+Syn_Frame::Syn_Frame(aalta_formula *af) : status_(Dfs_incomplete), edgeCons_(NULL), swin_checked_idx_(0), ewin_checked_idx_(0)
 {
     aalta_formula *acc_edge = preprocessAcc(af);
     if (acc_edge == NULL)

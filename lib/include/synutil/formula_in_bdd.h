@@ -1,14 +1,14 @@
 #ifndef __FORMULA_IN_BDD__
 #define __FORMULA_IN_BDD__
 
-#include <unordered_map>
 #include <iostream>
 #include <set>
+#include <unordered_map>
 
-#include "formula/aalta_formula.h"
-#include "synutil/partvar.h"
-#include "synutil/af_utils.h"
 #include "cudd/cudd.h"
+#include "formula/aalta_formula.h"
+#include "synutil/af_utils.h"
+#include "synutil/partvar.h"
 
 using namespace std;
 using namespace aalta;
@@ -17,7 +17,7 @@ typedef unsigned long long ull;
 
 class FormulaInBdd
 {
-private:
+  private:
     static unordered_map<ull, ull> aaltaP_to_bddP_;
     static unordered_map<int, ull> bddIdx_to_aaltaP_;
     // static unordered_map<ull,DdNode*> temporal_afp_to_bddP_;
@@ -33,7 +33,7 @@ private:
     // aalta_formula *xnf_formula_;
     DdNode *bdd_;
 
-public:
+  public:
     static DdManager *global_bdd_manager_;
     static bool is_X_var(DdNode *node) { return Cudd_NodeReadIndex(node) >= Y_var_nums && Cudd_NodeReadIndex(node) < total_var_nums; }
     static bool is_Y_var(DdNode *node) { return Cudd_NodeReadIndex(node) < Y_var_nums; }

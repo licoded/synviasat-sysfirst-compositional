@@ -1,12 +1,12 @@
 #include "synutil/formula_in_bdd.h"
-#include <iostream>
+#include <algorithm>
 #include <cassert>
+#include <iostream>
 #include <queue>
 #include <vector>
-#include <algorithm>
 
-#include "formula/aalta_formula.h"
 #include "cudd/cudd.h"
+#include "formula/aalta_formula.h"
 
 using namespace std;
 using namespace aalta;
@@ -81,10 +81,7 @@ void FormulaInBdd::CreatedMap4AaltaP2BddP(aalta_formula *af)
     case aalta_formula::Until:
     case aalta_formula::Release:
     {
-        aalta_formula *next_af = aalta_formula(
-                                     op == aalta_formula::Until ? aalta_formula::Next : aalta_formula::WNext,
-                                     NULL, af)
-                                     .unique();
+        aalta_formula *next_af = aalta_formula(op == aalta_formula::Until ? aalta_formula::Next : aalta_formula::WNext, NULL, af).unique();
         if (aaltaP_to_bddP_.find(ull(next_af)) == aaltaP_to_bddP_.end())
         {
             aaltaP_to_bddP_[ull(next_af)] = ull(Cudd_bddNewVar(global_bdd_manager_));

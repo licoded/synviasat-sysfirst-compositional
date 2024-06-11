@@ -1,18 +1,17 @@
+#include <algorithm>
 #include <cassert>
 #include <iostream>
 #include <tuple>
-#include <algorithm>
 
 #include "ltlfsat/carchecker.h"
-#include "ltlfsyn/synthesis.h"
 #include "ltlfsyn/edge_cons.h"
+#include "ltlfsyn/synthesis.h"
 #include "synutil/af_utils.h"
 #include "synutil/preprocess.h"
 #include "synutil/syn_states.h"
 
 edgeCons::edgeCons(DdNode *src_bdd, aalta_formula *state_af, aalta_formula *acc_edge)
-    : state_af_(state_af), blocked_Y_(aalta_formula::TRUE()),
-      status_(Dfs_incomplete), current_Y_idx_(-1)
+    : state_af_(state_af), blocked_Y_(aalta_formula::TRUE()), status_(Dfs_incomplete), current_Y_idx_(-1)
 {
     unordered_map<ull, XCons *> bdd_XCons;
     unordered_map<ull, vector<DdNode *> *> XCons_related_succ;
@@ -121,8 +120,7 @@ XCons::XCons(DdNode *root, DdNode *state_bddp, aalta_formula *state_af, aalta_fo
             DdNode *succ_state_bdd = FormulaInBdd(succ_state_af).GetBddPointer();
             successors_.push_back(succ_state_bdd);
 
-            if (succ_state_bdd == state_bddp ||
-                syn_states::is_ewin_state(succ_state_bdd))
+            if (succ_state_bdd == state_bddp || syn_states::is_ewin_state(succ_state_bdd))
             {
                 status_ = Ewin;
                 return;
@@ -167,8 +165,7 @@ void edgeCons::processSignal(Signal sig, DdNode *succ)
             insert_ewin_Y_idx(it->second);
         if (ewin_Y_idx_.size() == Y_parts_.size())
             status_ = Ewin;
-        else if ((ewin_Y_idx_.size() + dfs_complete_Y_idx_.size()) ==
-                 Y_parts_.size())
+        else if ((ewin_Y_idx_.size() + dfs_complete_Y_idx_.size()) == Y_parts_.size())
             status_ = Dfs_complete;
         current_Y_idx_ = -1;
     }
@@ -189,8 +186,7 @@ void edgeCons::processSignal(Signal sig, DdNode *succ)
                 insert_dfs_complete_Y_idx(it->second);
             }
         }
-        if ((ewin_Y_idx_.size() + dfs_complete_Y_idx_.size()) ==
-            Y_parts_.size())
+        if ((ewin_Y_idx_.size() + dfs_complete_Y_idx_.size()) == Y_parts_.size())
             status_ = Dfs_complete;
         if (X_cons_[current_Y_idx_]->get_status() != Dfs_incomplete)
             current_Y_idx_ = -1;
@@ -204,8 +200,7 @@ void edgeCons::processSignal(Signal sig, DdNode *succ)
             if (X_cons_[it->second]->get_status() == Dfs_complete)
                 insert_dfs_complete_Y_idx(it->second);
         }
-        if ((ewin_Y_idx_.size() + dfs_complete_Y_idx_.size()) ==
-            Y_parts_.size())
+        if ((ewin_Y_idx_.size() + dfs_complete_Y_idx_.size()) == Y_parts_.size())
             status_ = Dfs_complete;
         if (X_cons_[current_Y_idx_]->get_status() != Dfs_incomplete)
             current_Y_idx_ = -1;
@@ -256,8 +251,7 @@ void XCons::processSignal(Signal sig, DdNode *succ)
     current_X_idx_ = -1;
 }
 
-bool edgeCons::getEdge(unordered_set<int> &edge,
-                       queue<pair<aalta_formula *, aalta_formula *>> &model)
+bool edgeCons::getEdge(unordered_set<int> &edge, queue<pair<aalta_formula *, aalta_formula *>> &model)
 {
     aalta_formula *edge_af = NULL;
     if (current_Y_idx_ == -1)
@@ -274,10 +268,7 @@ bool edgeCons::getEdge(unordered_set<int> &edge,
                 aalta_formula *to_check = state_af_;
                 // cout << "state: " << to_check->to_string() << endl;
                 // cout << "constraint: " << (get_edge_cons_for_aaltaf())->to_string() << endl;
-                to_check = aalta_formula(aalta_formula::And,
-                                         to_check,
-                                         blocked_Y_)
-                               .unique();
+                to_check = aalta_formula(aalta_formula::And, to_check, blocked_Y_).unique();
                 // to_check = to_check->nnf();
                 to_check = to_check->add_tail();
                 to_check = to_check->remove_wnext();
@@ -305,8 +296,7 @@ bool edgeCons::getEdge(unordered_set<int> &edge,
         {
             if (current_Y_idx_ == -1)
                 for (int i = 0; i < Y_parts_.size(); ++i)
-                    if (ewin_Y_idx_.find(i) == ewin_Y_idx_.end() &&
-                        dfs_complete_Y_idx_.find(i) == dfs_complete_Y_idx_.end())
+                    if (ewin_Y_idx_.find(i) == ewin_Y_idx_.end() && dfs_complete_Y_idx_.find(i) == dfs_complete_Y_idx_.end())
                     {
                         current_Y_idx_ = i;
                         break;
@@ -326,8 +316,7 @@ aalta_formula *XCons::getEdge()
 {
     assert(current_X_idx_ == -1);
     for (int i = 0; i < X_parts_.size(); ++i)
-        if (swin_X_idx_.find(i) == swin_X_idx_.end() &&
-            searched_X_idx_.find(i) == searched_X_idx_.end())
+        if (swin_X_idx_.find(i) == swin_X_idx_.end() && searched_X_idx_.find(i) == searched_X_idx_.end())
         {
             current_X_idx_ = i;
             break;
@@ -377,8 +366,7 @@ int edgeCons::find_match_Y_idx(aalta_formula *Y)
     unordered_set<int> target_y;
     Y->to_set(target_y);
     for (int i = 0; i < Y_parts_.size(); ++i)
-        if (ewin_Y_idx_.find(i) == ewin_Y_idx_.end() &&
-            dfs_complete_Y_idx_.find(i) == dfs_complete_Y_idx_.end())
+        if (ewin_Y_idx_.find(i) == ewin_Y_idx_.end() && dfs_complete_Y_idx_.find(i) == dfs_complete_Y_idx_.end())
         {
             unordered_set<int> tmp;
             Y_parts_[i]->to_set(tmp);
@@ -462,8 +450,7 @@ int XCons::find_match_X_idx(aalta_formula *X)
     unordered_set<int> target_x;
     X->to_set(target_x);
     for (int i = 0; i < X_parts_.size(); ++i)
-        if (swin_X_idx_.find(i) == swin_X_idx_.end() &&
-            searched_X_idx_.find(i) == searched_X_idx_.end())
+        if (swin_X_idx_.find(i) == swin_X_idx_.end() && searched_X_idx_.find(i) == searched_X_idx_.end())
         {
             unordered_set<int> tmp;
             X_parts_[i]->to_set(tmp);

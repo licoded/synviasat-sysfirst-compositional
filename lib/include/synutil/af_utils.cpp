@@ -1,6 +1,6 @@
 #include "synutil/af_utils.h"
-#include <map>
 #include "synutil/partvar.h"
+#include <map>
 
 std::map<aalta_formula *, aalta_formula *> f_to_xnf;
 
@@ -96,8 +96,7 @@ aalta_formula *FormulaProgression(aalta_formula *predecessor, unordered_set<int>
     if (op == aalta_formula::Not || op >= 11)
     { // literal
         int lit = (op >= 11) ? op : (-((predecessor->r_af())->oper()));
-        return ((edge.find(lit) != edge.end()) ? aalta_formula::TRUE()
-                                               : aalta_formula::FALSE());
+        return ((edge.find(lit) != edge.end()) ? aalta_formula::TRUE() : aalta_formula::FALSE());
     }
     switch (op)
     {

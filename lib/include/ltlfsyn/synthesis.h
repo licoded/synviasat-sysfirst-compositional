@@ -2,14 +2,14 @@
 #define __SYNTHESIS__
 
 #include <cassert>
-#include <unordered_set>
 #include <set>
+#include <unordered_set>
 
+#include "cudd/cudd.h"
 #include "formula/aalta_formula.h"
 #include "ltlfsyn/edge_cons.h"
 #include "synutil/formula_in_bdd.h"
 #include "synutil/syn_type.h"
-#include "cudd/cudd.h"
 
 using namespace std;
 using namespace aalta;
@@ -25,7 +25,7 @@ class edgeCons;
 
 class Syn_Frame
 {
-private:
+  private:
     FormulaInBdd *state_in_bdd_;
     edgeCons *edgeCons_;
     Status status_;
@@ -33,8 +33,7 @@ private:
     int swin_checked_idx_;
     int ewin_checked_idx_;
 
-public:
-
+  public:
     Syn_Frame(aalta_formula *af);
     ~Syn_Frame();
 
@@ -57,8 +56,7 @@ void backwardSearch(std::vector<Syn_Frame *> &scc);
 void initial_tarjan_frame(Syn_Frame *cur_frame);
 void update_by_low(Syn_Frame *cur_frame, DdNode *cur_bddP);
 void update_by_dfn(Syn_Frame *cur_frame, Syn_Frame *next_frame);
-void getScc(int cur, std::vector<Syn_Frame *> &scc,
-            vector<Syn_Frame *> &sta, unordered_map<ull, int> &sta_bdd2curIdx_map);
+void getScc(int cur, std::vector<Syn_Frame *> &scc, vector<Syn_Frame *> &sta, unordered_map<ull, int> &sta_bdd2curIdx_map);
 
 void PartitionAtoms(aalta_formula *af, unordered_set<string> &env_val);
 

@@ -1,10 +1,10 @@
 #include "synutil/preprocess.h"
-#include <cassert>
-#include <cmath>
-#include <unordered_set>
 #include "synutil/af_utils.h"
 #include "synutil/formula_in_bdd.h"
 #include "utility.h"
+#include <cassert>
+#include <cmath>
+#include <unordered_set>
 
 using namespace std;
 

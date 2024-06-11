@@ -1,6 +1,5 @@
 #include "synutil/syn_states.h"
 
-
 std::unordered_set<ull> syn_states::swin_state_bdd_set;
 std::unordered_set<ull> syn_states::ewin_state_bdd_set;
 std::unordered_set<ull> syn_states::dfs_complete_state_bdd_set;

@@ -1,17 +1,17 @@
 #pragma once
 
-#include <unordered_set>
-#include <unordered_map>
-#include <vector>
-#include <cassert>
-#include "synutil/syn_type.h"
 #include "synutil/formula_in_bdd.h"
+#include "synutil/syn_type.h"
+#include <cassert>
+#include <unordered_map>
+#include <unordered_set>
+#include <vector>
 
 typedef unsigned long long ull;
 
 class syn_states
 {
-private:
+  private:
     static std::unordered_set<ull> swin_state_bdd_set;
     static std::unordered_set<ull> ewin_state_bdd_set;
     static std::vector<DdNode *> swin_state_bdd_vec;
@@ -19,7 +19,7 @@ private:
     static std::unordered_set<ull> dfs_complete_state_bdd_set;
     static std::unordered_map<ull, set<DdNode *> *> predecessors;
 
-public:
+  public:
     static Status getBddStatus(DdNode *b);
 
     static void insert_swin_state(DdNode *bddP, bool from_imply = false);
