@@ -18,10 +18,8 @@ unordered_map<ull, int> dfn;
 unordered_map<ull, int> low;
 int dfs_time;
 
-bool forwardSearch(Syn_Frame *init_frame)
+bool search_whole_DFA(Syn_Frame *init_frame, Syn_Graph &graph)
 {
-    if (init_frame->get_status() == Swin)
-        return true;
     dfs_time = 0;
     dfn.clear(), low.clear();
     int dfs_cur = 0;
@@ -43,13 +41,15 @@ bool forwardSearch(Syn_Frame *init_frame)
     {
         Status cur_state_status = dfs_sta[dfs_cur]->checkStatus();
         DdNode *cur_bddP = dfs_sta[dfs_cur]->GetBddPointer();
-        if (cur_state_status != Dfs_incomplete)
+        bool cur_state_should_stopSearch_flag = dfs_sta[dfs_cur]->should_stopSearch();
+        if (cur_state_should_stopSearch_flag)
         {
             if (dfn.at((ull)cur_bddP) == low.at((ull)cur_bddP))
             {
                 vector<Syn_Frame *> scc;
                 getScc(dfs_cur, scc, tarjan_sta, sta_bdd2curIdx_map);
                 backwardSearch(scc);
+                addSccToGraph(scc, graph);
                 for (auto it : scc)
                     delete it;
             }
@@ -82,18 +82,16 @@ bool forwardSearch(Syn_Frame *init_frame)
         unordered_set<int> edge_var_set;
         bool exist_edge_to_explorer = dfs_sta[dfs_cur]->getEdge(edge_var_set, model);
 
+        // cout << "edge:\t";
+        // for (auto it : edge_var_set)
+        //     cout << aalta_formula::get_name(it) << ", ";
+        // cout << endl;
+
         if (!exist_edge_to_explorer)
             continue;
 
-        if (IsAcc(dfs_sta[dfs_cur]->GetFormulaPointer(), edge_var_set)) // i.e. next_frame is true/swin
         {
-            dfs_sta[dfs_cur]->processSignal(To_swin, FormulaInBdd::TRUE_bddP_);
-            while (!model.empty())
-                model.pop();
-        }
-        else
-        {
-            aalta_formula *next_af = FormulaProgression(dfs_sta[dfs_cur]->GetFormulaPointer(), edge_var_set); //->simplify();
+            aalta_formula *next_af = FormulaProgression_empty(dfs_sta[dfs_cur]->GetFormulaPointer(), edge_var_set); //->simplify();
             // cout<<next_af->to_string()<<endl;
             Syn_Frame *next_frame = new Syn_Frame(next_af);
             if (next_frame->get_status() == Swin)
@@ -222,6 +220,9 @@ void backwardSearch(vector<Syn_Frame *> &scc)
     return;
 }
 
+/* TODO: modify!!! */
+void addSccToGraph(std::vector<Syn_Frame *> &scc, Syn_Graph &graph) {}
+
 void initial_tarjan_frame(Syn_Frame *cur_frame)
 {
     dfn.insert({ull(cur_frame->GetBddPointer()), dfs_time});
@@ -321,6 +322,13 @@ void Syn_Frame::processSignal(Signal sig, DdNode *succ)
 bool Syn_Frame::getEdge(unordered_set<int> &edge, queue<pair<aalta_formula *, aalta_formula *>> &model)
 {
     return edgeCons_->getEdge(edge, model);
+}
+
+bool Syn_Frame::should_stopSearch()
+{
+    /* TODO: modify!!! */
+    // return hasTravAllEdges() || (edgeCons_->get_status() == Ewin);
+    return edgeCons_->get_status() != Dfs_incomplete;
 }
 
 bool Syn_Frame::checkSwinForBackwardSearch()

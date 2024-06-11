@@ -66,7 +66,7 @@ bool is_realizable(aalta::aalta_formula *src_formula, std::unordered_set<std::st
 
         whole_dfa::Syn_Frame *init = new whole_dfa::Syn_Frame(it);
         DdNode *init_bddP = init->GetBddPointer();
-        // search_whole_DFA(init, graph);
+        whole_dfa::search_whole_DFA(init, graph);
 #ifdef DEBUG
         cout << "sub_af:\t" << it->to_string() << endl;
         printGraph(graph); // for DEBUG

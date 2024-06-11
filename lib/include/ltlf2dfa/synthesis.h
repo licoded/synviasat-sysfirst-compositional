@@ -6,6 +6,7 @@
 
 #include "formula/aalta_formula.h"
 #include "ltlf2dfa/edge_cons.h"
+#include "ltlf2dfa/graph_ext.h"
 #include "synutil/formula_in_bdd.h"
 #include "synutil/syn_type.h"
 #include <cudd/cuddObj.hh>
@@ -44,11 +45,15 @@ class Syn_Frame
     bool getEdge(unordered_set<int> &edge, queue<pair<aalta_formula *, aalta_formula *>> &model);
     Status get_status() { return status_; }
 
+    bool should_stopSearch();
+
     bool checkSwinForBackwardSearch();
 };
 
-bool forwardSearch(Syn_Frame *);
+bool search_whole_DFA(Syn_Frame *, Syn_Graph &graph);
 void backwardSearch(std::vector<Syn_Frame *> &scc);
+
+void addSccToGraph(std::vector<Syn_Frame *> &scc, Syn_Graph &graph);
 
 // for tarjan
 void initial_tarjan_frame(Syn_Frame *cur_frame);
