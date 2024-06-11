@@ -1,7 +1,5 @@
-#include <cstring>
 #include <fstream>
 #include <iostream>
-#include <string>
 #include <sys/time.h>
 #include <unordered_set>
 
@@ -10,6 +8,7 @@
 #include "ltlfsyn/synthesis.h"
 #include "synutil/preprocess.h"
 #include "synutil/syn_states.h"
+#include "util/getenv.h"
 
 using namespace aalta;
 using namespace std;
@@ -63,15 +62,8 @@ int main(int argc, char **argv)
     // af = af->split_next();
     af = mySimplify(af);
 
-    const char *verboseStr = getenv("VERBOSE");
-    int verbose = false;
-    if (verboseStr != NULL && strlen(verboseStr) > 0)
-        verbose = stoi(verboseStr);
-
-    const char *sattrace_flag_Str = getenv("SAT_TRACE");
-    SAT_TRACE_FLAG = false;
-    if (sattrace_flag_Str != NULL && strlen(sattrace_flag_Str) > 0)
-        SAT_TRACE_FLAG = stoi(sattrace_flag_Str);
+    bool verbose = readflag_from_env("VERBOSE");
+    SAT_TRACE_FLAG = readflag_from_env("SAT_TRACE");
 
     bool result = is_realizable(af, env_var, verbose);
     if (result)

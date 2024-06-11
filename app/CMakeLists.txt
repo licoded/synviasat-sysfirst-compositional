@@ -9,7 +9,7 @@ include_directories (${APP_SRC_PATH} ${LIBRARY_DEPENDS_PATH} ${LIBRARY_INCLUDE_P
 include_directories (${LIBRARY_DEPENDS_PATH}/minisat)
 
 #set sources
-file (GLOB APP_SOURCE_FILES "${APP_SRC_PATH}/*.cpp")
+file (GLOB_RECURSE APP_SOURCE_FILES "${APP_SRC_PATH}/*.cpp")
 
 #set target executable
 add_executable (${APP_NAME} ${APP_SOURCE_FILES})
