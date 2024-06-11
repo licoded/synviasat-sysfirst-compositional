@@ -12,6 +12,8 @@ set(LIBRARY_APPLICATION_PATH ${PROJECT_SOURCE_DIR}/app)
 set(LIBRARY_DEPENDS_PATH ${PROJECT_SOURCE_DIR}/lib/deps)
 set(LIBRARY_INCLUDE_PATH ${PROJECT_SOURCE_DIR}/lib/include)
 set(LIB_CUDD ${LIBRARY_DEPENDS_PATH}/cudd/libcudd.a)
+set(LIB_SYFT ${LIBRARY_DEPENDS_PATH}/syft/libsynthesis.a)
+file (GLOB LIB_MONA ${LIBRARY_DEPENDS_PATH}/mona/*.a) 
 
 include(etc/build_type.cmake)
 include(etc/cflags.cmake)
