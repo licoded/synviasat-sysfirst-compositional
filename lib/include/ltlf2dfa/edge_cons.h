@@ -4,6 +4,7 @@
 #include <queue>
 #include <set>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 #include "formula/aalta_formula.h"
@@ -29,6 +30,7 @@ class XCons
     int find_match_X_idx(aalta_formula *X);
     // aalta_formula *get_blocked_X() { return blocked_X_; }
     bool checkSwinForBackwardSearch();
+    bool hasTravAllEdges() { return trav_all_afX_X_idx_.size() == X_parts_.size(); }
 
   private:
     vector<aalta_formula *> X_parts_;
@@ -38,6 +40,7 @@ class XCons
 
     set<int> swin_X_idx_;
     set<int> searched_X_idx_;
+    set<int> trav_all_afX_X_idx_;
 
     // aalta_formula *blocked_X_;
 
@@ -46,6 +49,7 @@ class XCons
 
     void insert_swin_X_idx(int x);
     void insert_searched_X_idx(int x);
+    void insert_trav_all_afX_X_idx(int x);
 
     void resizeContainers()
     {
@@ -63,6 +67,7 @@ class edgeCons
     void processSignal(Signal, DdNode *succ);
     bool getEdge(unordered_set<int> &edge, queue<pair<aalta_formula *, aalta_formula *>> &model);
     bool checkSwinForBackwardSearch();
+    bool hasTravAllEdges() { return trav_all_afY_Y_idx_.size() == Y_parts_.size(); }
 
   private:
     aalta_formula *state_af_;
@@ -75,6 +80,7 @@ class edgeCons
 
     set<int> ewin_Y_idx_;
     set<int> dfs_complete_Y_idx_;
+    set<int> trav_all_afY_Y_idx_;
 
     Status status_;
     int current_Y_idx_;
@@ -84,6 +90,7 @@ class edgeCons
     int find_match_Y_idx(aalta_formula *Y);
     void insert_ewin_Y_idx(int y);
     void insert_dfs_complete_Y_idx(int y);
+    void insert_trav_all_afY_Y_idx(int y);
     bool checkConflict(pair<aalta_formula *, aalta_formula *> &edge)
     {
         return FormulaInBdd::check_conflict(aalta_formula(aalta_formula::And, edge.first, edge.second).unique(), blocked_Y_);
