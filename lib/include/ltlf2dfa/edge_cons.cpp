@@ -291,6 +291,15 @@ bool edgeCons::checkSwinForBackwardSearch()
     return is_swin;
 }
 
+void edgeCons::check_hasTravAllEdges()
+{
+    for (int i = 0; i < Y_parts_.size(); ++i)
+    {
+        if (X_cons_[i]->hasTravAllEdges())
+            insert_trav_all_afY_Y_idx(i);
+    }
+}
+
 bool XCons::checkSwinForBackwardSearch()
 {
     bool is_swin = true;

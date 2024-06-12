@@ -262,8 +262,7 @@ Syn_Frame::Syn_Frame(aalta_formula *af) : status_(Dfs_incomplete), edgeCons_(NUL
     if (!syn_states::in_isAcc_byEmpty_map(bddp))
         syn_states::set_isAcc_byEmpty(bddp, IsEmptyAcc(af->nnf()));
     edgeCons_ = new edgeCons(bddp, af, aalta_formula::FALSE());
-    /* TODO: modify!!! */
-    // edgeCons_->check_hasTravAllEdges();
+    edgeCons_->check_hasTravAllEdges();
     status_ = edgeCons_->get_status();
     if (syn_states::isAcc_byEmpty(bddp))
         status_ = Swin;
@@ -330,9 +329,7 @@ bool Syn_Frame::getEdge(unordered_set<int> &edge, queue<pair<aalta_formula *, aa
 
 bool Syn_Frame::should_stopSearch()
 {
-    /* TODO: modify!!! */
-    // return hasTravAllEdges() || (edgeCons_->get_status() == Ewin);
-    return edgeCons_->get_status() != Dfs_incomplete;
+    return (edgeCons_->get_status() == Ewin) || (edgeCons_->hasTravAllEdges());
 }
 
 bool Syn_Frame::checkSwinForBackwardSearch()
