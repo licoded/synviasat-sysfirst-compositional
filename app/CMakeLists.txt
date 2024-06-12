@@ -17,6 +17,7 @@ add_executable (${APP_NAME} ${APP_SOURCE_FILES})
 
 #add the library
 target_link_libraries(${APP_NAME} ltlfsyn ltlf2dfa)
+# target_link_libraries(${APP_NAME} ltlf2dfa ltlfsyn ltlfsat ${EXTERNAL_LIBS} deps)
 
 set_target_properties(${APP_NAME} PROPERTIES OUTPUT_NAME ltlfsyn)
 
