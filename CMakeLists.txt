@@ -11,9 +11,14 @@ endif()
 set(LIBRARY_APPLICATION_PATH ${PROJECT_SOURCE_DIR}/app)
 set(LIBRARY_DEPENDS_PATH ${PROJECT_SOURCE_DIR}/lib/deps)
 set(LIBRARY_INCLUDE_PATH ${PROJECT_SOURCE_DIR}/lib/include)
-set(LIB_CUDD ${LIBRARY_DEPENDS_PATH}/cudd/libcudd.a)
 set(LIB_SYFT ${LIBRARY_DEPENDS_PATH}/syft/libsynthesis.a)
-file (GLOB LIB_MONA ${LIBRARY_DEPENDS_PATH}/mona/*.a) 
+set(LIB_MONA
+  ${LIBRARY_DEPENDS_PATH}/mona/libmonadfa.a
+  ${LIBRARY_DEPENDS_PATH}/mona/libmonamem.a
+  ${LIBRARY_DEPENDS_PATH}/mona/libmonabdd.a
+)
+set(LIB_CUDD ${LIBRARY_DEPENDS_PATH}/cudd/libcudd.a)
+# set(EXTERNAL_LIBS ${LIB_SYFT} ${LIB_MONA} ${LIB_CUDD} z)
 
 include(etc/build_type.cmake)
 include(etc/cflags.cmake)

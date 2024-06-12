@@ -14,5 +14,4 @@ add_library (${LIB_NAME}
         STATIC
         ${LIB_SOURCE_FILES}
 )
-
 target_link_libraries(${LIB_NAME} deps)

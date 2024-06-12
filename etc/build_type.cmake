@@ -12,7 +12,6 @@ if (CMAKE_BUILD_TYPE STREQUAL "Release")
     # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg")
 elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
     message("-- In Debug mode")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -flto") # to fix compilation ERROR (undefined reference of mona/dfa.h) in Debug mode
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D DEBUG -Wall -g")
     # set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -pg -fsanitize=undefined -fsanitize=address -fno-omit-frame-pointer")
 endif()
