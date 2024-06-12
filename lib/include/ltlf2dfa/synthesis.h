@@ -47,6 +47,8 @@ class Syn_Frame
 
     bool should_stopSearch();
 
+    void get_succ_edges(vector<Syn_Edge> &succ_edges);
+
     bool checkSwinForBackwardSearch();
 };
 

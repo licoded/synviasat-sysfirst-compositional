@@ -215,8 +215,26 @@ void backwardSearch(vector<Syn_Frame *> &scc)
     return;
 }
 
-/* TODO: modify!!! */
-void addSccToGraph(std::vector<Syn_Frame *> &scc, Syn_Graph &graph) {}
+void addSccToGraph(vector<Syn_Frame *> &scc, Syn_Graph &graph)
+{
+    for (auto syn_frame_ptr : scc)
+    {
+        auto bddp = syn_frame_ptr->GetBddPointer();
+        graph.add_vertex(bddp);
+        if (syn_frame_ptr->get_status() == Ewin || syn_states::is_ewin_state(bddp))
+            continue;
+        vector<Syn_Edge> succ_edges;
+        syn_frame_ptr->get_succ_edges(succ_edges);
+        for (auto syn_edge : succ_edges)
+        {
+            // cout << "||\t" << ull(bddp) << " -> " << ull(syn_edge.first) << "\tby\t" << syn_edge.second->to_string() << endl;
+            /* NOTE: self-loop in sub_af cannot be deleted, as they may not self-loop in whole_af */
+            // if (ull(bddp) == ull(syn_edge.first))
+            //     continue;
+            graph.add_edge(bddp, syn_edge.first, syn_edge.second);
+        }
+    }
+}
 
 void initial_tarjan_frame(Syn_Frame *cur_frame)
 {
@@ -326,6 +344,11 @@ bool Syn_Frame::getEdge(unordered_set<int> &edge, queue<pair<aalta_formula *, aa
 bool Syn_Frame::should_stopSearch()
 {
     return (edgeCons_->get_status() == Ewin) || (edgeCons_->hasTravAllEdges());
+}
+
+void Syn_Frame::get_succ_edges(vector<Syn_Edge> &succ_edges)
+{
+    return edgeCons_->get_succ_edges(succ_edges);
 }
 
 bool Syn_Frame::checkSwinForBackwardSearch()
