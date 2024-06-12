@@ -68,6 +68,7 @@ class edgeCons
     bool getEdge(unordered_set<int> &edge, queue<pair<aalta_formula *, aalta_formula *>> &model);
     bool checkSwinForBackwardSearch();
     bool hasTravAllEdges() { return trav_all_afY_Y_idx_.size() == Y_parts_.size(); }
+    void check_hasTravAllEdges();
 
   private:
     aalta_formula *state_af_;
