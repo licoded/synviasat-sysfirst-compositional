@@ -157,16 +157,17 @@ void XCons::get_related_succ(vector<DdNode *> &related_succ)
 
 void edgeCons::processSignal(Signal sig, DdNode *succ)
 {
+    assert(sig != Unsat);
     if (sig == To_ewin)
     {
         auto range = succ_bddP_to_idx_.equal_range(ull(succ));
         for (auto it = range.first; it != range.second; ++it)
+        {
             insert_ewin_Y_idx(it->second);
+            insert_trav_all_afY_Y_idx(it->second);
+        }
         if (ewin_Y_idx_.size() == Y_parts_.size())
             status_ = Ewin;
-        else if ((ewin_Y_idx_.size() + dfs_complete_Y_idx_.size()) == Y_parts_.size())
-            status_ = Dfs_complete;
-        current_Y_idx_ = -1;
     }
     else if (sig == To_swin)
     {
@@ -174,21 +175,17 @@ void edgeCons::processSignal(Signal sig, DdNode *succ)
         for (auto it = range.first; it != range.second; ++it)
         {
             X_cons_[it->second]->processSignal(To_swin, succ);
+            if (X_cons_[it->second]->hasTravAllEdges())
+                insert_trav_all_afY_Y_idx(it->second);
             if (X_cons_[it->second]->get_status() == Swin)
             {
                 status_ = Swin;
-                current_Y_idx_ = -1;
-                return;
             }
             else if (X_cons_[it->second]->get_status() == Dfs_complete)
             {
                 insert_dfs_complete_Y_idx(it->second);
             }
         }
-        if ((ewin_Y_idx_.size() + dfs_complete_Y_idx_.size()) == Y_parts_.size())
-            status_ = Dfs_complete;
-        if (X_cons_[current_Y_idx_]->get_status() != Dfs_incomplete)
-            current_Y_idx_ = -1;
     }
     else if (sig == Pending)
     {
@@ -196,27 +193,16 @@ void edgeCons::processSignal(Signal sig, DdNode *succ)
         for (auto it = range.first; it != range.second; ++it)
         {
             X_cons_[it->second]->processSignal(Pending, succ);
+            if (X_cons_[it->second]->hasTravAllEdges())
+                insert_trav_all_afY_Y_idx(it->second);
             if (X_cons_[it->second]->get_status() == Dfs_complete)
                 insert_dfs_complete_Y_idx(it->second);
         }
-        if ((ewin_Y_idx_.size() + dfs_complete_Y_idx_.size()) == Y_parts_.size())
-            status_ = Dfs_complete;
-        if (X_cons_[current_Y_idx_]->get_status() != Dfs_incomplete)
-            current_Y_idx_ = -1;
     }
-    else
-    {
-        assert(current_Y_idx_ == -1);
-        status_ = dfs_complete_Y_idx_.empty() ? Ewin : Dfs_complete;
-        // else
-        // {
-        //     assert(X_cons_[current_Y_idx_]->get_status() == Dfs_incomplete);
-        //     for (int i = 0; i < X_cons_.size(); ++i)
-        //         if (X_cons_[i] == X_cons_[current_Y_idx_])
-        //             insert_ewin_Y_idx(i);
-        // }
+    if ((ewin_Y_idx_.size() + dfs_complete_Y_idx_.size()) == Y_parts_.size())
+        status_ = Dfs_complete;
+    if (X_cons_[current_Y_idx_]->get_status() != Dfs_incomplete)
         current_Y_idx_ = -1;
-    }
 }
 
 void XCons::processSignal(Signal sig, DdNode *succ)
@@ -226,27 +212,24 @@ void XCons::processSignal(Signal sig, DdNode *succ)
     {
         auto range = succ_bddP_to_idx_.equal_range(ull(succ));
         for (auto it = range.first; it != range.second; ++it)
+        {
             insert_swin_X_idx(it->second);
+            insert_trav_all_afX_X_idx(it->second);
+        }
         if (swin_X_idx_.size() == X_parts_.size())
             status_ = Swin;
-        else if (swin_X_idx_.size() + searched_X_idx_.size() == X_parts_.size())
-            status_ = Dfs_complete;
     }
     else if (sig == Pending)
     {
         auto range = succ_bddP_to_idx_.equal_range(ull(succ));
         for (auto it = range.first; it != range.second; ++it)
+        {
             insert_searched_X_idx(it->second);
-        if (swin_X_idx_.size() + searched_X_idx_.size() == X_parts_.size())
-            status_ = Dfs_complete;
+            insert_trav_all_afX_X_idx(it->second);
+        }
     }
-    // else
-    // {
-    //     if (searched_Y_idx_.empty())
-    //         status_ = Ewin;
-    //     else
-    //         status_ = Dfs_complete;
-    // }
+    if (swin_X_idx_.size() + searched_X_idx_.size() == X_parts_.size())
+        status_ = Dfs_complete;
     current_X_idx_ = -1;
 }
 
