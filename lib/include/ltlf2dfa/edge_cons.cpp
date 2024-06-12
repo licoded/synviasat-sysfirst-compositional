@@ -300,6 +300,32 @@ void edgeCons::check_hasTravAllEdges()
     }
 }
 
+void edgeCons::get_succ_edges(vector<Syn_Edge> &succ_edges)
+{
+    assert(X_cons_.size() == Y_parts_.size());
+    if (get_status() == Ewin)
+        return;
+    for (int i = 0; i < X_cons_.size(); ++i)
+    {
+        aalta_formula *af_Y = Y_parts_[i];
+        X_cons_[i]->get_succ_edges(af_Y, succ_edges);
+    }
+}
+
+void XCons::get_succ_edges(aalta_formula *af_X, vector<Syn_Edge> &succ_edges)
+{
+    assert(X_parts_.size() == successors_.size());
+    for (int i = 0; i < X_parts_.size(); ++i)
+    {
+        DdNode *succ_bdd = successors_[i];
+        if (syn_states::in_isAcc_byEmpty_map(succ_bdd) && syn_states::isAcc_byEmpty(succ_bdd))
+            continue;
+        aalta_formula *af_Y = X_parts_[i];
+        aalta_formula *af_edge = aalta_formula(aalta_formula::And, af_X, af_Y).unique();
+        succ_edges.push_back({succ_bdd, af_edge});
+    }
+}
+
 bool XCons::checkSwinForBackwardSearch()
 {
     bool is_swin = true;

@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "formula/aalta_formula.h"
+#include "ltlf2dfa/graph_ext.h"
 #include "synutil/formula_in_bdd.h"
 #include "synutil/syn_type.h"
 
@@ -31,6 +32,7 @@ class XCons
     // aalta_formula *get_blocked_X() { return blocked_X_; }
     bool checkSwinForBackwardSearch();
     bool hasTravAllEdges() { return trav_all_afX_X_idx_.size() == X_parts_.size(); }
+    void get_succ_edges(aalta_formula *af_X, vector<Syn_Edge> &succ_edges);
 
   private:
     vector<aalta_formula *> X_parts_;
@@ -69,6 +71,7 @@ class edgeCons
     bool checkSwinForBackwardSearch();
     bool hasTravAllEdges() { return trav_all_afY_Y_idx_.size() == Y_parts_.size(); }
     void check_hasTravAllEdges();
+    void get_succ_edges(vector<Syn_Edge> &succ_edges);
 
   private:
     aalta_formula *state_af_;
