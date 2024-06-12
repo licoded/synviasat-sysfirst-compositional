@@ -256,14 +256,13 @@ bool edgeCons::getEdge(unordered_set<int> &edge, queue<pair<aalta_formula *, aal
     if (current_Y_idx_ == -1)
         for (int i = 0; i < Y_parts_.size(); ++i)
         {
-            if (X_cons_[i]->hasTravAllEdges())
-                insert_trav_all_afY_Y_idx(i);
             if (trav_all_afY_Y_idx_.find(i) == trav_all_afY_Y_idx_.end())
             {
                 current_Y_idx_ = i;
                 break;
             }
         }
+    assert(current_Y_idx_ != -1);
     aalta_formula *af_Y = Y_parts_[current_Y_idx_];
     aalta_formula *af_X = X_cons_[current_Y_idx_]->getEdge();
     edge_af = aalta_formula(aalta_formula::And, af_X, af_Y).unique()->simplify();
