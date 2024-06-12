@@ -164,6 +164,7 @@ void edgeCons::processSignal(Signal sig, DdNode *succ)
         auto range = succ_bddP_to_idx_.equal_range(ull(succ));
         for (auto it = range.first; it != range.second; ++it)
         {
+            X_cons_[it->second]->processSignal(To_ewin, succ);
             insert_ewin_Y_idx(it->second);
             insert_trav_all_afY_Y_idx(it->second);
         }
@@ -208,8 +209,12 @@ void edgeCons::processSignal(Signal sig, DdNode *succ)
 
 void XCons::processSignal(Signal sig, DdNode *succ)
 {
-    assert(sig != To_ewin && sig != Unsat);
-    if (sig == To_swin)
+    assert(sig != Unsat);
+    if (sig == To_ewin)
+    {
+        status_ = Ewin;
+    }
+    else if (sig == To_swin)
     {
         auto range = succ_bddP_to_idx_.equal_range(ull(succ));
         for (auto it = range.first; it != range.second; ++it)
