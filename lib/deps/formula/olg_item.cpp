@@ -383,7 +383,7 @@ olg_item::toDimacs()
   pid_t pid = getpid ();
   ostringstream str;  
   str << pid;
-  string filename = "cnf.dimacs";
+  string filename = "/tmp/cnf.dimacs";
   filename += str.str ();
   FILE *f = NULL;
   f = fopen(filename.c_str (), "w");
