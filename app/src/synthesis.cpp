@@ -21,7 +21,6 @@ bool is_realizable(aalta::aalta_formula *src_formula, std::unordered_set<std::st
     FormulaInBdd::InitBdd4LTLf(src_formula);
     syn_states::insert_swin_state(FormulaInBdd::TRUE_bddP_);
     syn_states::insert_ewin_state(FormulaInBdd::FALSE_bddP_);
-    ltlfsyn::Syn_Frame *init = new ltlfsyn::Syn_Frame(src_formula);
 
     hash_set<aalta_formula *> and_sub_afs = src_formula->and_to_set();
     for (auto it : and_sub_afs)
