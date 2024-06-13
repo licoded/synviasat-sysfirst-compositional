@@ -18,6 +18,23 @@ unordered_map<ull, int> dfn;
 unordered_map<ull, int> low;
 int dfs_time;
 
+string getStatusStr(Status status)
+{
+    switch (status)
+    {
+    case Swin:
+        return "Swin";
+    case Ewin:
+        return "Ewin";
+    case Dfs_complete:
+        return "Dfs_complete";
+    case Dfs_incomplete:
+        return "Dfs_incomplete";
+    default:
+        return "Unknown";
+    }
+}
+
 bool search_whole_DFA(Syn_Frame *init_frame, Syn_Graph &graph)
 {
     dfs_time = 0;
@@ -44,18 +61,39 @@ bool search_whole_DFA(Syn_Frame *init_frame, Syn_Graph &graph)
         bool cur_state_should_stopSearch_flag = dfs_sta[dfs_cur]->should_stopSearch();
         if (cur_state_should_stopSearch_flag)
         {
+            aalta_formula *cur_afP = dfs_sta[dfs_cur]->GetFormulaPointer();
             if (dfn.at((ull)cur_bddP) == low.at((ull)cur_bddP))
             {
                 vector<Syn_Frame *> scc;
                 getScc(dfs_cur, scc, tarjan_sta, sta_bdd2curIdx_map);
                 backwardSearch(scc);
                 addSccToGraph(scc, graph);
+                dout << "=getScc=\t" << scc.size() << endl;
+                for (auto it : scc)
+                {
+                    dout << "\t" << it->GetBddPointer() << "\t" << getStatusStr(it->get_status()) << "\t"
+                         << it->GetFormulaPointer()->to_string() << endl;
+                }
                 for (auto it : scc)
                     delete it;
+            }
+            else
+            {
+                dout << "=pop="
+                     << "\t"
+                     << "cur_bddP is not a root of SCC" << endl;
             }
             prefix_bdd2curIdx_map.erase((ull)cur_bddP);
             dfs_sta.pop_back();
             --dfs_cur;
+            dout << "\t"
+                 << "pre state:"
+                 << "\t";
+            if (dfs_cur < 0)
+                dout << "DFS complete" << endl;
+            else
+                dout << "\t" << dfs_sta[dfs_cur]->GetBddPointer() << "\t" << getStatusStr(dfs_sta[dfs_cur]->get_status()) << "\t"
+                     << dfs_sta[dfs_cur]->GetFormulaPointer()->to_string() << endl;
             if (dfs_cur < 0)
             {
                 syn_states::releasePredecessors();
@@ -82,17 +120,17 @@ bool search_whole_DFA(Syn_Frame *init_frame, Syn_Graph &graph)
         unordered_set<int> edge_var_set;
         bool exist_edge_to_explorer = dfs_sta[dfs_cur]->getEdge(edge_var_set, model);
 
-        // cout << "edge:\t";
-        // for (auto it : edge_var_set)
-        //     cout << aalta_formula::get_name(it) << ", ";
-        // cout << endl;
-
         if (!exist_edge_to_explorer)
             continue;
 
         {
             aalta_formula *next_af = FormulaProgression_empty(dfs_sta[dfs_cur]->GetFormulaPointer(), edge_var_set); //->simplify();
-            // cout<<next_af->to_string()<<endl;
+            dout << "\t" << dfs_sta[dfs_cur]->GetFormulaPointer()->to_string() << endl;
+            dout << "\t\t";
+            for (auto it : edge_var_set)
+                dout << (it > 0 ? "" : "!") << aalta_formula::get_name(abs(it)) << ", ";
+            dout << endl;
+            dout << "\t" << next_af->to_string() << endl;
             Syn_Frame *next_frame = new Syn_Frame(next_af);
 
             /* TODO: maybe check TRUE_bddP_ is enough? */

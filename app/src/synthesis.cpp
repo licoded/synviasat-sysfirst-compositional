@@ -1,4 +1,5 @@
 #include "synthesis.h"
+#include "debug.h"
 #include "ltlf2dfa/mona_ext.h"
 #include "ltlf2dfa/syft_ext.h"
 #include "ltlf2dfa/synthesis.h"
@@ -66,9 +67,9 @@ bool is_realizable(aalta::aalta_formula *src_formula, std::unordered_set<std::st
 
         whole_dfa::Syn_Frame *init = new whole_dfa::Syn_Frame(it);
         DdNode *init_bddP = init->GetBddPointer();
+        dout << "sub_af:\t" << it->to_string() << endl;
         whole_dfa::search_whole_DFA(init, graph);
 #ifdef DEBUG
-        cout << "sub_af:\t" << it->to_string() << endl;
         printGraph(graph); // for DEBUG
 #endif
 

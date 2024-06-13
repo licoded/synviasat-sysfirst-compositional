@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <cassert>
+#include <iomanip>
 #include <iostream>
 #include <tuple>
 
@@ -230,6 +231,10 @@ bool edgeCons::getEdge(unordered_set<int> &edge, queue<pair<aalta_formula *, aal
     assert(current_Y_idx_ != -1);
     aalta_formula *af_Y = Y_parts_[current_Y_idx_];
     aalta_formula *af_X = X_cons_[current_Y_idx_]->getEdge();
+    dout << "=getEdge="
+         << "\t"
+         << "Y: " << setw(24) << af_Y->to_string() << "\t"
+         << "X: " << setw(24) << af_X->to_string() << endl;
     edge_af = aalta_formula(aalta_formula::And, af_X, af_Y).unique()->simplify();
     edge_af->to_set(edge);
     // cout<<edge_af->to_string()<<endl;
