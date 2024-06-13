@@ -61,23 +61,7 @@ edgeCons::edgeCons(DdNode *src_bdd, aalta_formula *state_af, aalta_formula *acc_
     }
     for (const auto &it : XCons_related_succ)
         delete it.second;
-    for (int i = 0; i < X_cons_.size(); ++i)
-        if (X_cons_[i]->get_status() == Ewin)
-            // ewin_Y_idx_.insert(i);
-            insert_ewin_Y_idx(i);
-        else if (X_cons_[i]->get_status() == Swin)
-        {
-            status_ = Swin;
-            return;
-        }
-        else if (X_cons_[i]->get_status() == Dfs_complete)
-            insert_dfs_complete_Y_idx(i);
-    if (ewin_Y_idx_.size() == Y_parts_.size())
-        status_ = Ewin;
-    else if (ewin_Y_idx_.size() + dfs_complete_Y_idx_.size() == Y_parts_.size())
-        status_ = Dfs_complete;
-    else
-        resizeContainers();
+    resizeContainers();
 }
 
 edgeCons::~edgeCons()
@@ -122,12 +106,8 @@ XCons::XCons(DdNode *root, DdNode *state_bddp, aalta_formula *state_af, aalta_fo
             if (succ_state_bdd == state_bddp || syn_states::is_ewin_state(succ_state_bdd))
             {
                 status_ = Ewin;
-                return;
+                break;
             }
-            else if (syn_states::is_swin_state(succ_state_bdd))
-                insert_swin_X_idx(X_parts_.size() - 1);
-            else if (syn_states::is_dfs_complete_state(succ_state_bdd))
-                insert_searched_X_idx(X_parts_.size() - 1);
 
             succ_bddP_to_idx_.insert({ull(succ_state_bdd), successors_.size() - 1});
             continue;
@@ -141,12 +121,7 @@ XCons::XCons(DdNode *root, DdNode *state_bddp, aalta_formula *state_af, aalta_fo
         q.push({Cudd_T(node), T_afX, is_complement ^ Cudd_IsComplement(node)});
         q.push({Cudd_E(node), E_afX, is_complement ^ Cudd_IsComplement(node)});
     }
-    if (swin_X_idx_.size() == X_parts_.size())
-        status_ = Swin;
-    else if (swin_X_idx_.size() + searched_X_idx_.size() == X_parts_.size())
-        status_ = Dfs_complete;
-    else
-        resizeContainers();
+    resizeContainers();
 }
 
 void XCons::get_related_succ(vector<DdNode *> &related_succ)
@@ -202,7 +177,7 @@ void edgeCons::processSignal(Signal sig, DdNode *succ)
     }
     if ((ewin_Y_idx_.size() + dfs_complete_Y_idx_.size()) == Y_parts_.size())
         status_ = Dfs_complete;
-    if (X_cons_[current_Y_idx_]->get_status() != Dfs_incomplete)
+    if (X_cons_[current_Y_idx_]->hasTravAllEdges())
         current_Y_idx_ = -1;
 }
 
@@ -244,6 +219,8 @@ bool edgeCons::getEdge(unordered_set<int> &edge, queue<pair<aalta_formula *, aal
     if (current_Y_idx_ == -1)
         for (int i = 0; i < Y_parts_.size(); ++i)
         {
+            if (X_cons_[i]->hasTravAllEdges())
+                insert_trav_all_afY_Y_idx(i);
             if (trav_all_afY_Y_idx_.find(i) == trav_all_afY_Y_idx_.end())
             {
                 current_Y_idx_ = i;
@@ -300,7 +277,7 @@ void edgeCons::check_hasTravAllEdges()
 {
     for (int i = 0; i < Y_parts_.size(); ++i)
     {
-        if (X_cons_[i]->hasTravAllEdges())
+        if ((X_cons_[i]->get_status() == Ewin) || X_cons_[i]->hasTravAllEdges())
             insert_trav_all_afY_Y_idx(i);
     }
 }

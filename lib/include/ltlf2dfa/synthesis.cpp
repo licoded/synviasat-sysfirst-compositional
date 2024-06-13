@@ -94,16 +94,10 @@ bool search_whole_DFA(Syn_Frame *init_frame, Syn_Graph &graph)
             aalta_formula *next_af = FormulaProgression_empty(dfs_sta[dfs_cur]->GetFormulaPointer(), edge_var_set); //->simplify();
             // cout<<next_af->to_string()<<endl;
             Syn_Frame *next_frame = new Syn_Frame(next_af);
-            if (next_frame->get_status() == Swin)
-            {
-                syn_states::insert_swin_state(next_frame->GetBddPointer(), false);
-                dfs_sta[dfs_cur]->processSignal(To_swin, next_frame->GetBddPointer());
-                while (!model.empty())
-                    model.pop();
-                continue;
-            }
 
-            syn_states::addToGraph(dfs_sta[dfs_cur]->GetBddPointer(), next_frame->GetBddPointer());
+            /* TODO: maybe check TRUE_bddP_ is enough? */
+            if ((next_frame->GetBddPointer() == FormulaInBdd::TRUE_bddP_) && (next_frame->GetBddPointer() == FormulaInBdd::FALSE_bddP_))
+                syn_states::addToGraph(dfs_sta[dfs_cur]->GetBddPointer(), next_frame->GetBddPointer());
 
             if (dfn.find(ull(next_frame->GetBddPointer())) == dfn.end())
             {
@@ -271,6 +265,7 @@ void getScc(int dfs_cur, std::vector<Syn_Frame *> &scc, vector<Syn_Frame *> &tar
         if (tarjan_sta.size() == dfs_cur)
             break;
     }
+    assert(tarjan_sta.size() == dfs_cur);
 }
 
 Syn_Frame::Syn_Frame(aalta_formula *af) : status_(Dfs_incomplete), edgeCons_(NULL), swin_checked_idx_(0), ewin_checked_idx_(0)
