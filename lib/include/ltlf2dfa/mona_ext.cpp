@@ -26,6 +26,8 @@ void printDfaFile(DFA *dfa, string dfa_filename, int var_num, std::vector<std::s
         var_names_ptr.push_back(var_name_ptr);
     }
     dfaExport(dfa, dfa_filename.data(), var_num, var_names_ptr.data(), var_orders.data());
+    for (auto var_name_ptr : var_names_ptr)
+        delete[] var_name_ptr;
 }
 
 DFA *graph2DFA(Syn_Graph &graph, DdNode *init_bddP, int var_num, std::vector<int> indicies)
