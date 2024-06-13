@@ -100,7 +100,7 @@ bool is_realizable(aalta::aalta_formula *src_formula, std::unordered_set<std::st
     string wholedfa2dot_filename = "examples/temp-drafts/whole_dfa2.dot";
     printDotFile(dfa, "examples/temp-drafts/whole.dot", var_num, var_index);
     printDfaFile(dfa, "examples/temp-drafts/whole.dfa", var_num, var_names, orders);
-    system("dfa2dot examples/temp-drafts/whole.dot examples/temp-drafts/whole_dfa2.dot");
+    system("/home/lic/syntcomp2024/install_root/usr/local/bin/dfa2dot examples/temp-drafts/whole.dot examples/temp-drafts/whole_dfa2.dot");
 #endif
     free(dfa);
 
