@@ -1,6 +1,7 @@
 #include "ltlf2dfa/mona_ext.h"
 #include "synutil/formula_in_bdd.h"
 #include "synutil/syn_states.h"
+#include <cstring>
 
 typedef unsigned long long ull;
 
@@ -19,7 +20,11 @@ void printDfaFile(DFA *dfa, string dfa_filename, int var_num, std::vector<std::s
 {
     std::vector<char *> var_names_ptr;
     for (auto var_name : var_names)
-        var_names_ptr.push_back(var_name.data());
+    {
+        char *var_name_ptr = new char[var_name.size() + 1];
+        std::strcpy(var_name_ptr, var_name.c_str());
+        var_names_ptr.push_back(var_name_ptr);
+    }
     dfaExport(dfa, dfa_filename.data(), var_num, var_names_ptr.data(), var_orders.data());
 }
 
