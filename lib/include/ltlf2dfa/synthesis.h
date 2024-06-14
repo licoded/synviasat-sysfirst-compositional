@@ -61,7 +61,7 @@ void addSccToGraph(std::vector<Syn_Frame *> &scc, Syn_Graph &graph);
 void initial_tarjan_frame(Syn_Frame *cur_frame);
 void update_by_low(Syn_Frame *cur_frame, DdNode *cur_bddP);
 void update_by_dfn(Syn_Frame *cur_frame, Syn_Frame *next_frame);
-void getScc(int cur, std::vector<Syn_Frame *> &scc, vector<Syn_Frame *> &sta, unordered_map<ull, int> &sta_bdd2curIdx_map);
+void getScc(int cur, std::vector<Syn_Frame *> &scc, vector<Syn_Frame *> &sta, unordered_map<ull, int> &bdd2tarjanRootTimeId_map);
 
 void PartitionAtoms(aalta_formula *af, unordered_set<string> &env_val);
 

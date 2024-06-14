@@ -50,9 +50,9 @@ bool search_whole_DFA(Syn_Frame *init_frame, Syn_Graph &graph)
     tarjan_sta.push_back(init_frame);
 
     unordered_map<ull, int> prefix_bdd2curIdx_map;
-    unordered_map<ull, int> sta_bdd2curIdx_map;
+    unordered_map<ull, int> bdd2tarjanRootTimeId_map;
     prefix_bdd2curIdx_map.insert({ull(init_frame->GetBddPointer()), dfs_cur});
-    sta_bdd2curIdx_map.insert({ull(init_frame->GetBddPointer()), tarjan_sta.size() - 1});
+    bdd2tarjanRootTimeId_map.insert({ull(init_frame->GetBddPointer()), -1});
     queue<pair<aalta_formula *, aalta_formula *>> model;
     while (dfs_cur >= 0)
     {
@@ -65,7 +65,7 @@ bool search_whole_DFA(Syn_Frame *init_frame, Syn_Graph &graph)
             if (dfn.at((ull)cur_bddP) == low.at((ull)cur_bddP))
             {
                 vector<Syn_Frame *> scc;
-                getScc(dfs_cur, scc, tarjan_sta, sta_bdd2curIdx_map);
+                getScc(dfs_cur, scc, tarjan_sta, bdd2tarjanRootTimeId_map);
                 backwardSearch(scc);
                 addSccToGraph(scc, graph);
                 dout << "=getScc=\t" << scc.size() << endl;
@@ -146,12 +146,12 @@ bool search_whole_DFA(Syn_Frame *init_frame, Syn_Graph &graph)
                 tarjan_sta.push_back(next_frame);
                 dfs_cur++;
                 prefix_bdd2curIdx_map.insert({(ull)next_frame->GetBddPointer(), dfs_cur});
-                sta_bdd2curIdx_map.insert({(ull)next_frame->GetBddPointer(), tarjan_sta.size() - 1});
+                bdd2tarjanRootTimeId_map.insert({(ull)next_frame->GetBddPointer(), -1});
             }
             else
             {
                 // update low
-                if (sta_bdd2curIdx_map.find(ull(next_frame->GetBddPointer())) != sta_bdd2curIdx_map.end())
+                if (bdd2tarjanRootTimeId_map.at(ull(next_frame->GetBddPointer())) == -1)
                     update_by_dfn(dfs_sta[dfs_cur], next_frame);
 
                 // do synthesis feedback
@@ -170,13 +170,7 @@ bool search_whole_DFA(Syn_Frame *init_frame, Syn_Graph &graph)
                 else // else: has cur-- (moved backward)
                 {
                     Status next_state_status;
-                    auto Iter = sta_bdd2curIdx_map.find(ull(next_frame->GetBddPointer()));
-                    if (Iter != sta_bdd2curIdx_map.end())
-                        next_state_status = tarjan_sta[Iter->second]->get_status();
-                    else
-                    {
-                        next_state_status = syn_states::getBddStatus(next_frame->GetBddPointer());
-                    }
+                    next_state_status = syn_states::getBddStatus(next_frame->GetBddPointer());
                     assert(next_state_status != Dfs_incomplete);
                     Signal sig = To_swin;
                     if (next_state_status == Ewin)
@@ -291,15 +285,14 @@ void update_by_dfn(Syn_Frame *cur_frame, Syn_Frame *next_frame)
     low[(ull)cur_frame->GetBddPointer()] = min(low.at((ull)cur_frame->GetBddPointer()), dfn.at((ull)next_frame->GetBddPointer()));
 }
 
-void getScc(int dfs_cur, std::vector<Syn_Frame *> &scc, vector<Syn_Frame *> &tarjan_sta, unordered_map<ull, int> &sta_bdd2curIdx_map)
+void getScc(int dfs_cur, std::vector<Syn_Frame *> &scc, vector<Syn_Frame *> &tarjan_sta, unordered_map<ull, int> &bdd2tarjanRootTimeId_map)
 {
     int lowTimeId = dfn.at((ull)tarjan_sta[dfs_cur]->GetBddPointer());
 
     while (!tarjan_sta.empty())
     {
         scc.push_back(tarjan_sta.back());
-        /* TODO: assert exist before erase? And may bdd_prt repeat in sta, and when 2nd erase it will? */
-        sta_bdd2curIdx_map.erase(ull(tarjan_sta.back()->GetBddPointer()));
+        bdd2tarjanRootTimeId_map.at((ull)tarjan_sta.back()->GetBddPointer()) = lowTimeId;
         tarjan_sta.pop_back();
         if (tarjan_sta.size() == dfs_cur)
             break;
