@@ -156,6 +156,7 @@ inline void syn_states::releasePredecessors()
 {
     for (auto it : predecessors)
         delete it.second;
+    predecessors.clear();
 }
 
 inline void syn_states::set_isAcc_byEmpty(ull bddP, bool isAcc_byEmpty)
