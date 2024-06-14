@@ -65,7 +65,7 @@ bool search_whole_DFA(Syn_Frame *init_frame, Syn_Graph &graph)
             if (dfn.at(cur_bddP) == low.at(cur_bddP))
             {
                 vector<Syn_Frame *> scc;
-                getScc(dfs_cur, scc, tarjan_sta, bdd2tarjanRootTimeId_map);
+                getScc(dfn.at(cur_bddP), scc, tarjan_sta, bdd2tarjanRootTimeId_map);
                 backwardSearch(scc);
                 addSccToGraph(scc, graph);
                 dout << "=getScc=\t" << scc.size() << endl;
@@ -287,11 +287,9 @@ void update_by_dfn(Syn_Frame *cur_frame, Syn_Frame *next_frame)
     low[cur_frame->GetBddPointer()] = min(low.at(cur_frame->GetBddPointer()), dfn.at(next_frame->GetBddPointer()));
 }
 
-void getScc(int dfs_cur, std::vector<Syn_Frame *> &scc, vector<Syn_Frame *> &tarjan_sta,
+void getScc(int lowTimeId, std::vector<Syn_Frame *> &scc, vector<Syn_Frame *> &tarjan_sta,
             unordered_map<DdNode *, int> &bdd2tarjanRootTimeId_map)
 {
-    int lowTimeId = dfn.at(tarjan_sta[dfs_cur]->GetBddPointer());
-
     do
     {
         scc.push_back(tarjan_sta.back());
