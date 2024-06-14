@@ -82,6 +82,8 @@ bool search_whole_DFA(Syn_Frame *init_frame, Syn_Graph &graph)
                 dout << "=pop="
                      << "\t"
                      << "cur_bddP is not a root of SCC" << endl;
+                dout << "\t" << dfs_sta[dfs_cur]->GetBddPointer() << "\t" << getStatusStr(dfs_sta[dfs_cur]->get_status()) << "\t"
+                     << dfs_sta[dfs_cur]->GetFormulaPointer()->to_string() << endl;
             }
             prefix_bdd2curIdx_map.erase((ull)cur_bddP);
             dfs_sta.pop_back();
