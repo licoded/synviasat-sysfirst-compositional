@@ -14,8 +14,8 @@ namespace whole_dfa {
 
 bool SAT_TRACE_FLAG = false;
 
-unordered_map<ull, int> dfn;
-unordered_map<ull, int> low;
+unordered_map<DdNode *, int> dfn;
+unordered_map<DdNode *, int> low;
 int dfs_time;
 
 string getStatusStr(Status status)
@@ -49,10 +49,10 @@ bool search_whole_DFA(Syn_Frame *init_frame, Syn_Graph &graph)
     dfs_sta.push_back(init_frame);
     tarjan_sta.push_back(init_frame);
 
-    unordered_map<ull, int> prefix_bdd2curIdx_map;
-    unordered_map<ull, int> bdd2tarjanRootTimeId_map;
-    prefix_bdd2curIdx_map.insert({ull(init_frame->GetBddPointer()), dfs_cur});
-    bdd2tarjanRootTimeId_map.insert({ull(init_frame->GetBddPointer()), -1});
+    unordered_map<DdNode *, int> prefix_bdd2curIdx_map;
+    unordered_map<DdNode *, int> bdd2tarjanRootTimeId_map;
+    prefix_bdd2curIdx_map.insert({init_frame->GetBddPointer(), dfs_cur});
+    bdd2tarjanRootTimeId_map.insert({init_frame->GetBddPointer(), -1});
     queue<pair<aalta_formula *, aalta_formula *>> model;
     while (dfs_cur >= 0)
     {
@@ -62,7 +62,7 @@ bool search_whole_DFA(Syn_Frame *init_frame, Syn_Graph &graph)
         if (cur_state_should_stopSearch_flag)
         {
             aalta_formula *cur_afP = dfs_sta[dfs_cur]->GetFormulaPointer();
-            if (dfn.at((ull)cur_bddP) == low.at((ull)cur_bddP))
+            if (dfn.at(cur_bddP) == low.at(cur_bddP))
             {
                 vector<Syn_Frame *> scc;
                 getScc(dfs_cur, scc, tarjan_sta, bdd2tarjanRootTimeId_map);
@@ -85,7 +85,7 @@ bool search_whole_DFA(Syn_Frame *init_frame, Syn_Graph &graph)
                 dout << "\t" << dfs_sta[dfs_cur]->GetBddPointer() << "\t" << getStatusStr(dfs_sta[dfs_cur]->get_status()) << "\t"
                      << dfs_sta[dfs_cur]->GetFormulaPointer()->to_string() << endl;
             }
-            prefix_bdd2curIdx_map.erase((ull)cur_bddP);
+            prefix_bdd2curIdx_map.erase(cur_bddP);
             dfs_sta.pop_back();
             --dfs_cur;
             dout << "\t"
@@ -140,24 +140,24 @@ bool search_whole_DFA(Syn_Frame *init_frame, Syn_Graph &graph)
              */
             if ((next_frame->GetBddPointer() != FormulaInBdd::TRUE_bddP_) && (next_frame->GetBddPointer() != FormulaInBdd::FALSE_bddP_))
                 syn_states::addToGraph(dfs_sta[dfs_cur]->GetBddPointer(), next_frame->GetBddPointer());
-            if (dfn.find(ull(next_frame->GetBddPointer())) == dfn.end())
+            if (dfn.find(next_frame->GetBddPointer()) == dfn.end())
             {
                 initial_tarjan_frame(next_frame);
 
                 dfs_sta.push_back(next_frame);
                 tarjan_sta.push_back(next_frame);
                 dfs_cur++;
-                prefix_bdd2curIdx_map.insert({(ull)next_frame->GetBddPointer(), dfs_cur});
-                bdd2tarjanRootTimeId_map.insert({(ull)next_frame->GetBddPointer(), -1});
+                prefix_bdd2curIdx_map.insert({next_frame->GetBddPointer(), dfs_cur});
+                bdd2tarjanRootTimeId_map.insert({next_frame->GetBddPointer(), -1});
             }
             else
             {
                 // update low
-                if (bdd2tarjanRootTimeId_map.at(ull(next_frame->GetBddPointer())) == -1)
+                if (bdd2tarjanRootTimeId_map.at(next_frame->GetBddPointer()) == -1)
                     update_by_dfn(dfs_sta[dfs_cur], next_frame);
 
                 // do synthesis feedback
-                if (prefix_bdd2curIdx_map.find((ull)next_frame->GetBddPointer()) != prefix_bdd2curIdx_map.end())
+                if (prefix_bdd2curIdx_map.find(next_frame->GetBddPointer()) != prefix_bdd2curIdx_map.end())
                 {
                     /**
                      * cur_Y has X -> prefix, cannot make cur_state undetermined
@@ -272,32 +272,33 @@ void addSccToGraph(vector<Syn_Frame *> &scc, Syn_Graph &graph)
 
 void initial_tarjan_frame(Syn_Frame *cur_frame)
 {
-    dfn.insert({ull(cur_frame->GetBddPointer()), dfs_time});
-    low.insert({ull(cur_frame->GetBddPointer()), dfs_time});
+    dfn.insert({cur_frame->GetBddPointer(), dfs_time});
+    low.insert({cur_frame->GetBddPointer(), dfs_time});
     ++dfs_time;
 }
 
 void update_by_low(Syn_Frame *cur_frame, DdNode *next_bddP)
 {
-    low[(ull)cur_frame->GetBddPointer()] = min(low.at((ull)cur_frame->GetBddPointer()), low.at((ull)next_bddP));
+    low[cur_frame->GetBddPointer()] = min(low.at(cur_frame->GetBddPointer()), low.at(next_bddP));
 }
 
 void update_by_dfn(Syn_Frame *cur_frame, Syn_Frame *next_frame)
 {
-    low[(ull)cur_frame->GetBddPointer()] = min(low.at((ull)cur_frame->GetBddPointer()), dfn.at((ull)next_frame->GetBddPointer()));
+    low[cur_frame->GetBddPointer()] = min(low.at(cur_frame->GetBddPointer()), dfn.at(next_frame->GetBddPointer()));
 }
 
-void getScc(int dfs_cur, std::vector<Syn_Frame *> &scc, vector<Syn_Frame *> &tarjan_sta, unordered_map<ull, int> &bdd2tarjanRootTimeId_map)
+void getScc(int dfs_cur, std::vector<Syn_Frame *> &scc, vector<Syn_Frame *> &tarjan_sta,
+            unordered_map<DdNode *, int> &bdd2tarjanRootTimeId_map)
 {
-    int lowTimeId = dfn.at((ull)tarjan_sta[dfs_cur]->GetBddPointer());
+    int lowTimeId = dfn.at(tarjan_sta[dfs_cur]->GetBddPointer());
 
     do
     {
         scc.push_back(tarjan_sta.back());
-        bdd2tarjanRootTimeId_map.at(ull(tarjan_sta.back()->GetBddPointer())) = lowTimeId;
+        bdd2tarjanRootTimeId_map.at(tarjan_sta.back()->GetBddPointer()) = lowTimeId;
         tarjan_sta.pop_back();
-    } while (dfn.at(ull(scc.back()->GetBddPointer())) != lowTimeId);
-    assert(dfn.at(ull(scc.back()->GetBddPointer())) == lowTimeId);
+    } while (dfn.at(scc.back()->GetBddPointer()) != lowTimeId);
+    assert(dfn.at(scc.back()->GetBddPointer()) == lowTimeId);
 }
 
 Syn_Frame::Syn_Frame(aalta_formula *af) : status_(Dfs_incomplete), edgeCons_(NULL), swin_checked_idx_(0), ewin_checked_idx_(0)
