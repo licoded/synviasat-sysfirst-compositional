@@ -289,15 +289,13 @@ void getScc(int dfs_cur, std::vector<Syn_Frame *> &scc, vector<Syn_Frame *> &tar
 {
     int lowTimeId = dfn.at((ull)tarjan_sta[dfs_cur]->GetBddPointer());
 
-    while (!tarjan_sta.empty())
+    do
     {
         scc.push_back(tarjan_sta.back());
-        bdd2tarjanRootTimeId_map.at((ull)tarjan_sta.back()->GetBddPointer()) = lowTimeId;
+        bdd2tarjanRootTimeId_map.at(ull(tarjan_sta.back()->GetBddPointer())) = lowTimeId;
         tarjan_sta.pop_back();
-        if (tarjan_sta.size() == dfs_cur)
-            break;
-    }
-    assert(tarjan_sta.size() == dfs_cur);
+    } while (dfn.at(ull(scc.back()->GetBddPointer())) != lowTimeId);
+    assert(dfn.at(ull(scc.back()->GetBddPointer())) == lowTimeId);
 }
 
 Syn_Frame::Syn_Frame(aalta_formula *af) : status_(Dfs_incomplete), edgeCons_(NULL), swin_checked_idx_(0), ewin_checked_idx_(0)
