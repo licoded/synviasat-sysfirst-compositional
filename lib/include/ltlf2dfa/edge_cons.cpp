@@ -69,7 +69,6 @@ edgeCons::edgeCons(DdNode *src_bdd, aalta_formula *state_af, aalta_formula *acc_
         else if (X_cons_[i]->get_status() == Swin)
         {
             status_ = Swin;
-            return;
         }
         else if (X_cons_[i]->get_status() == Dfs_complete)
             insert_dfs_complete_Y_idx(i);
@@ -203,7 +202,7 @@ void edgeCons::processSignal(Signal sig, DdNode *succ)
     }
     if ((ewin_Y_idx_.size() + dfs_complete_Y_idx_.size()) == Y_parts_.size())
         status_ = Dfs_complete;
-    if (X_cons_[current_Y_idx_]->get_status() != Dfs_incomplete)
+    if (X_cons_[current_Y_idx_]->hasTravAllEdges())
         current_Y_idx_ = -1;
 }
 
@@ -222,8 +221,6 @@ void XCons::processSignal(Signal sig, DdNode *succ)
             insert_swin_X_idx(it->second);
             insert_trav_all_afX_X_idx(it->second);
         }
-        if (swin_X_idx_.size() == X_parts_.size())
-            status_ = Swin;
     }
     else if (sig == Pending)
     {
@@ -234,7 +231,9 @@ void XCons::processSignal(Signal sig, DdNode *succ)
             insert_trav_all_afX_X_idx(it->second);
         }
     }
-    if (swin_X_idx_.size() + searched_X_idx_.size() == X_parts_.size())
+    if (swin_X_idx_.size() == X_parts_.size())
+        status_ = Swin;
+    else if (swin_X_idx_.size() + searched_X_idx_.size() == X_parts_.size())
         status_ = Dfs_complete;
     current_X_idx_ = -1;
 }
@@ -245,6 +244,8 @@ bool edgeCons::getEdge(unordered_set<int> &edge, queue<pair<aalta_formula *, aal
     if (current_Y_idx_ == -1)
         for (int i = 0; i < Y_parts_.size(); ++i)
         {
+            if (X_cons_[i]->hasTravAllEdges())
+                insert_trav_all_afY_Y_idx(i);
             if (trav_all_afY_Y_idx_.find(i) == trav_all_afY_Y_idx_.end())
             {
                 current_Y_idx_ = i;
@@ -305,7 +306,7 @@ void edgeCons::check_hasTravAllEdges()
 {
     for (int i = 0; i < Y_parts_.size(); ++i)
     {
-        if (X_cons_[i]->hasTravAllEdges())
+        if ((X_cons_[i]->get_status() == Ewin) || X_cons_[i]->hasTravAllEdges())
             insert_trav_all_afY_Y_idx(i);
     }
 }
