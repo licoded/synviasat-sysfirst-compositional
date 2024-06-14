@@ -200,9 +200,9 @@ void edgeCons::processSignal(Signal sig, DdNode *succ)
                 insert_dfs_complete_Y_idx(it->second);
         }
     }
-    if ((ewin_Y_idx_.size() + dfs_complete_Y_idx_.size()) == Y_parts_.size())
+    if ((dfs_complete_Y_idx_.size() != 0) && ((ewin_Y_idx_.size() + dfs_complete_Y_idx_.size()) == Y_parts_.size()))
         status_ = Dfs_complete;
-    if (X_cons_[current_Y_idx_]->hasTravAllEdges())
+    if (trav_all_afY_Y_idx_.find(current_Y_idx_) != trav_all_afY_Y_idx_.end())
         current_Y_idx_ = -1;
 }
 
@@ -244,7 +244,7 @@ bool edgeCons::getEdge(unordered_set<int> &edge, queue<pair<aalta_formula *, aal
     if (current_Y_idx_ == -1)
         for (int i = 0; i < Y_parts_.size(); ++i)
         {
-            if (X_cons_[i]->hasTravAllEdges())
+            if (X_cons_[i]->hasTravAllEdges() || X_cons_[i]->get_status() == Ewin)
                 insert_trav_all_afY_Y_idx(i);
             if (trav_all_afY_Y_idx_.find(i) == trav_all_afY_Y_idx_.end())
             {
