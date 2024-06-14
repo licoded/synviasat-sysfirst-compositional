@@ -55,7 +55,7 @@ int main(int argc, char **argv)
     // rewrite formula
     aalta_formula *af;
     // set tail id to be 1
-    af = aalta_formula::TAIL();
+    aalta_formula::TAIL();
     aalta_formula::TRUE();
     aalta_formula::FALSE();
     af = aalta_formula(input_f.c_str(), true).nnf(); //->unique();
@@ -63,6 +63,21 @@ int main(int argc, char **argv)
     af = af->simplify();
     // af = af->split_next();
     af = mySimplify(af);
+
+    /**
+     * Work: Clear aalta_formula cache, after mySimplify,
+     *      as this process may reduce the number of boolean variables in the formula.
+     *
+     * NOTE: And it's necessary because the algorithm to get var_names to build dfa will break down!
+     */
+    std::string reduced_af_s = af->to_string();
+    dout << "af after simplication:\t" << reduced_af_s << std::endl;
+    aalta_formula::destroy();
+    // set tail id to be 1
+    aalta_formula::TAIL();
+    aalta_formula::TRUE();
+    aalta_formula::FALSE();
+    af = aalta_formula(reduced_af_s.c_str(), true).nnf();
 
     bool verbose = readflag_from_env("VERBOSE");
     ltlfsyn::SAT_TRACE_FLAG = readflag_from_env("SAT_TRACE");

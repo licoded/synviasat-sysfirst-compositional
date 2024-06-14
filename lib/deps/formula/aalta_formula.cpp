@@ -79,6 +79,7 @@ aalta_formula::destroy ()
   names.clear ();
   _TRUE = NULL;
   _FALSE = NULL;
+  TAIL_ = NULL;
 }
 
 void 
