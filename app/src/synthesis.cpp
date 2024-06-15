@@ -33,6 +33,8 @@ bool is_realizable(aalta::aalta_formula *src_formula, std::unordered_set<std::st
 
     if (and_sub_afs.size() == 1)
         return true;
+    if (!ltlfsyn::forwardSearch(new ltlfsyn::Syn_Frame(src_formula)))
+        return false;
 
     whole_dfa::SAT_TRACE_FLAG = false;
     syn_states::set_isAcc_byEmpty(FormulaInBdd::TRUE_bddP_, true);
@@ -90,13 +92,16 @@ bool is_realizable(aalta::aalta_formula *src_formula, std::unordered_set<std::st
         free(dfa_cur_min);
         if (Minimize_FLAG)
             dfa = dfaMinimize(dfa);
+        // check if current DFA is realizable
+        char *temp_filename = tmpnam(nullptr);
+        printDfaFile(dfa, string(temp_filename), var_num, var_names, orders);
+        bool syn_res = syft_check_synthesis(SynType::SYS_FIRST, string(temp_filename), partfile);
+        if (!syn_res)
+        {
+            free(dfa);
+            return false;
+        }
     }
-
-    char *temp_filename = tmpnam(nullptr);
-    printDfaFile(dfa, string(temp_filename), var_num, var_names, orders);
-
-    bool syn_res = syft_check_synthesis(SynType::SYS_FIRST, string(temp_filename), partfile);
-
 #ifdef DEBUG
     string wholedfa2dot_filename = "examples/temp-drafts/whole_dfa2.dot";
     printDotFile(dfa, "examples/temp-drafts/whole.dot", var_num, var_index);
@@ -104,6 +109,5 @@ bool is_realizable(aalta::aalta_formula *src_formula, std::unordered_set<std::st
     system("/home/lic/syntcomp2024/install_root/usr/local/bin/dfa2dot examples/temp-drafts/whole.dot examples/temp-drafts/whole_dfa2.dot");
 #endif
     free(dfa);
-
-    return syn_res;
+    return true;
 }
