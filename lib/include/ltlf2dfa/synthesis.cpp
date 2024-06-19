@@ -157,14 +157,15 @@ bool search_whole_DFA(Syn_Frame *init_frame, Syn_Graph &graph)
                     update_by_dfn(dfs_sta[dfs_cur], next_frame);
 
                 // do synthesis feedback
+                if (next_frame->GetBddPointer() == dfs_sta[dfs_cur]->GetBddPointer())
+                {
+                }
                 if (prefix_bdd2curIdx_map.find(next_frame->GetBddPointer()) != prefix_bdd2curIdx_map.end())
                 {
                     /**
                      * cur_Y has X -> prefix, cannot make cur_state undetermined
                      * only all Y has X -> prefix, can make cur_state undetermined
                      */
-                    // self loop is processed in the constructiobn of edgeCons
-                    assert(next_frame->GetBddPointer() != dfs_sta[dfs_cur]->GetBddPointer());
                     dfs_sta[dfs_cur]->processSignal(Pending, next_frame->GetBddPointer());
                     while (!model.empty())
                         model.pop();

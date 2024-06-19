@@ -119,7 +119,7 @@ XCons::XCons(DdNode *root, DdNode *state_bddp, aalta_formula *state_af, aalta_fo
             DdNode *succ_state_bdd = FormulaInBdd(succ_state_af, xnf_empty(succ_state_af)).GetBddPointer();
             successors_.push_back(succ_state_bdd);
 
-            if (succ_state_bdd == state_bddp || syn_states::is_ewin_state(succ_state_bdd))
+            if (syn_states::is_ewin_state(succ_state_bdd))
             {
                 status_ = Ewin;
                 return;
